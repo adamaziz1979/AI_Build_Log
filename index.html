@@ -232,6 +232,10 @@ td.st .saved{display:block;min-height:1em;margin-top:4px;font-family:var(--font-
 .notes{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;display:grid;gap:10px}
 .notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--muted);font-size:.82rem}
 .notes strong{color:var(--fg);font-weight:500}
+.notes-row{display:grid;gap:24px}
+.notes-row .notes ul{display:block;columns:2;column-gap:40px}
+.notes-row .notes li{break-inside:avoid;margin-bottom:6px}
+@media (max-width:860px){.notes-row .notes ul{columns:1}}
 footer{color:var(--muted);font-size:.8rem}
 </style>
 </head>
@@ -554,6 +558,7 @@ footer{color:var(--muted);font-size:.8rem}
     </details>
   </section>
 
+  <div class="notes-row">
   <section class="notes assess">
     <h3>Overall assessment</h3>
     <ul>
@@ -581,6 +586,7 @@ footer{color:var(--muted);font-size:.8rem}
       <li><strong>Version updates:</strong> the number of times each build was changed after it was first built, counted as separate editing sittings in the session logs. The portfolio and seat planner use their published version history instead. ChatGPT figures come from your inventory.</li>
       <li><strong>Precision:</strong> figures are rounded to the nearest 5 minutes. Treat them as within plus or minus 25%.</li>
     </ul>
+  </div>
   </div>
 
   <footer>Source: <span class="mono">my-skills/</span>, <span class="mono">.claude/agents/</span>, workflow run logs, the Career folder, GitHub, Claude Code session logs and your ChatGPT inventory, read 18 Oct 2026.</footer>
