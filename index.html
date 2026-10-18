@@ -95,7 +95,7 @@ a.jump{display:inline-block;margin:2px 10px 10px 25px;font-size:.78rem;color:var
 .msum li{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:10px;align-items:baseline;font-size:.86rem;line-height:1.45;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 6px 6px 0}
 .msum b{font-family:var(--font-mono);font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
 .msum li.in{animation:msin .45s ease-out}
-.msum li.cur{background:var(--accent-soft);border-color:var(--accent)}
+.msum li[hidden]{display:none}
 @keyframes msin{from{opacity:0;transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){.msum{scroll-behavior:auto}.msum li.in{animation:none}}
 .mchip{position:relative;cursor:default}
@@ -653,10 +653,11 @@ document.addEventListener('click', function (e) {
   /* Month ends: the line pauses at each one and that month's summary is added to the list under the chart */
   var MONTH_X = [86.1, 300, 514.6, 620]; /* Aug stops just before the 1 Sep jump */
   var list = document.getElementById('msum'), items = list ? Array.prototype.slice.call(list.children).reverse() : []; /* list is newest first; items[0] is July */
+  items.forEach(function (li, i) { li.hidden = i > 0; });
   function showItem(i) {
     var li = items[i]; if (!li) return;
-    items.forEach(function (o) { o.classList.remove('cur'); });
-    li.hidden = false; li.classList.remove('in'); void li.offsetWidth; li.classList.add('in', 'cur');
+    if (!li.hidden) return;
+    li.hidden = false; li.classList.remove('in'); void li.offsetWidth; li.classList.add('in');
     list.scrollTop = 0;
   }
 
@@ -699,7 +700,7 @@ document.addEventListener('click', function (e) {
       phases.push({ kind: 'pause', at: mx, i: i, t0: total, d: PAUSE }); total += PAUSE;
       px = mx;
     });
-    items.forEach(function (li) { li.hidden = true; li.classList.remove('in', 'cur'); });
+    items.forEach(function (li, i) { li.hidden = i > 0; li.classList.remove('in'); });
     var shown = -1, reached = [];
     svg._job = tween(total, function (t) {
       var ms = t * total, x = X0, pause = -1, last = -1;
@@ -723,7 +724,7 @@ document.addEventListener('click', function (e) {
         m.els[0].setAttribute('r', i === pause ? 3.5 + 2 * Math.abs(Math.sin(ms / 260)) : 3.5);
       });
       drawBars(ms, x, reached, final);
-      if (final) { items.forEach(function (li) { li.hidden = false; li.classList.remove('cur'); }); return; }
+      if (final) { items.forEach(function (li) { li.hidden = false; }); return; }
       while (shown < last) { shown++; showItem(shown); }
     });
   }
