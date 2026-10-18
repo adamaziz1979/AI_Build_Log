@@ -91,6 +91,13 @@ a.jump{display:inline-block;margin:2px 10px 10px 25px;font-size:.78rem;color:var
 .cum .mend circle{fill:var(--bg);stroke:var(--accent);stroke-width:2}
 .cum .mend text{fill:var(--fg);font-family:var(--font-body);font-size:12px}
 .cum .mend tspan{fill:var(--accent);font-weight:600}
+.msum{list-style:none;margin:0;padding:0 4px 0 0;display:grid;gap:8px;max-height:15em;overflow-y:auto;scroll-behavior:smooth}
+.msum li{display:grid;grid-template-columns:4.6em minmax(0,1fr);gap:10px;align-items:baseline;font-size:.86rem;line-height:1.45;padding:8px 10px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 6px 6px 0}
+.msum b{font-family:var(--font-mono);font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.msum li.in{animation:msin .45s ease-out}
+.msum li.cur{background:var(--accent-soft);border-color:var(--accent)}
+@keyframes msin{from{opacity:0;transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.msum{scroll-behavior:auto}.msum li.in{animation:none}}
 .mchip{position:relative;cursor:default}
 .mchip:hover,.mchip:focus,.mchip:focus-within{z-index:30}
 .mcol:hover,.mcol:focus-within{position:relative;z-index:25}
@@ -301,6 +308,12 @@ footer{color:var(--muted);font-size:.8rem}
         </g>
       </svg>
       <p class="eyebrow" style="margin:0">Running total of builds. Labels show builds completed each month: 4 + 1 + 8 + 3 = 16. Hover a point to see what was built that day.</p>
+      <ul class="msum" id="msum" aria-label="Month by month summary">
+        <li><b>Oct</b><span>+3 builds so far, 16 in total: ACCA Event Info Sheet, ACCA Seat Planner (~7h 50m, the longest build) and the Junior Touch Footy Attendance Poll.</span></li>
+        <li><b>Sep</b><span>+8 builds, 13 in total. The busiest month: 3 ChatGPT job tools, the interview brief suite (agent, brief and web report) and 2 GitHub publishing skills.</span></li>
+        <li><b>Aug</b><span>+1 build, 5 in total: Home Internet Speed Report, tracking home internet speed by time of day.</span></li>
+        <li><b>Jul</b><span>4 builds in the first 3 days: Portfolio Website, Daily Job Scanner, Publish to GitHub and What's On Today.</span></li>
+      </ul>
     </section>
   </div>
 
@@ -585,6 +598,143 @@ document.addEventListener('click', function (e) {
   el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
   el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
 });
+</script>
+<script>
+/* KPI and build timeline animations: both render complete at rest and play once when first scrolled into view. The timeline pauses at each month end and adds that month's summary to the list below it, while the category bars grow in step; click the timeline to replay. */
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return;
+  var NS = 'http://www.w3.org/2000/svg';
+  var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+  var live = new Set();
+  function tween(ms, fn) {
+    if (document.hidden) { fn(1); return; }
+    var job = { fn: fn }, t0 = performance.now(); live.add(job);
+    /* next frame via requestAnimationFrame, with a timer backup for views that stop painting */
+    function next(cb) { var done = false; function go() { if (done) return; done = true; cb(performance.now()); } requestAnimationFrame(go); setTimeout(go, 60); }
+    (function f(now) {
+      if (!live.has(job)) return;
+      var t = Math.min(1, (now - t0) / ms); fn(t);
+      if (t < 1) next(f); else live.delete(job);
+    })(t0);
+    return job;
+  }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { live.forEach(function (j) { j.fn(1); }); live.clear(); } });
+
+  /* KPIs: count any numbers in a stat, treating "Xh YYm" as minutes */
+  function counter(node) {
+    var src = node.textContent;
+    return function (e) {
+      node.textContent = e >= 1 ? src : src.replace(/(\d+)h (\d+)m|\d+/g, function (m, h, mm) {
+        if (h != null) { var tot = Math.round((+h * 60 + +mm) * e); return Math.floor(tot / 60) + 'h ' + String(tot % 60).padStart(2, '0') + 'm'; }
+        return String(Math.round(+m * e));
+      });
+    };
+  }
+  function playStats() {
+    var cs = Array.prototype.map.call(document.querySelectorAll('.stats .stat b'), counter);
+    tween(1400, function (t) { var e = ease(t); cs.forEach(function (c) { c(e); }); });
+  }
+
+  /* Build timeline: the line draws left to right, dots pop in, month labels appear as the line reaches them */
+  var svg = document.querySelector('.cum-svg');
+  function setupTimeline() {
+    if (!svg || svg._anim) return svg && svg._anim;
+    var defs = document.createElementNS(NS, 'defs'), clip = document.createElementNS(NS, 'clipPath'), rect = document.createElementNS(NS, 'rect');
+    clip.id = 'cum-clip'; rect.setAttribute('x', 0); rect.setAttribute('y', 0); rect.setAttribute('height', 300); rect.setAttribute('width', 700);
+    clip.appendChild(rect); defs.appendChild(clip); svg.insertBefore(defs, svg.firstChild);
+    var step = svg.querySelector('.step'); step.setAttribute('clip-path', 'url(#cum-clip)');
+    var dots = Array.prototype.map.call(svg.querySelectorAll('.dots circle'), function (c) { c.style.transformBox = 'fill-box'; c.style.transformOrigin = 'center'; return { el: c, x: +c.getAttribute('cx') }; });
+    var marks = [], mend = svg.querySelectorAll('.mend circle');
+    Array.prototype.forEach.call(mend, function (c) { marks.push({ els: [c, c.nextElementSibling], x: +c.getAttribute('cx') }); });
+    svg._anim = { rect: rect, dots: dots, marks: marks };
+    return svg._anim;
+  }
+  /* Month ends: the line pauses at each one and that month's summary is added to the list under the chart */
+  var MONTH_X = [86.1, 300, 514.6, 620]; /* Aug stops just before the 1 Sep jump */
+  var list = document.getElementById('msum'), items = list ? Array.prototype.slice.call(list.children).reverse() : []; /* list is newest first; items[0] is July */
+  function showItem(i) {
+    var li = items[i]; if (!li) return;
+    items.forEach(function (o) { o.classList.remove('cur'); });
+    li.hidden = false; li.classList.remove('in'); void li.offsetWidth; li.classList.add('in', 'cur');
+    list.scrollTop = 0;
+  }
+
+  /* Category bars follow the timeline: each build adds its build time to its category when the line reaches it */
+  var BUILDS = [[44.0,'brand',510],[44.0,'career',70],[51.0,'pub',30],[58.0,'daily',15],[212.6,'home',35],
+    [303.9,'career',0],[303.9,'career',0],[472.5,'career',0],[493.6,'career',20],[493.6,'career',45],[493.6,'career',45],
+    [500.6,'pub',10],[500.6,'pub',10],[577.9,'sport',35],[591.9,'sport',470],[598.9,'sport',90]];
+  var MAXMIN = 595;
+  var cats = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.bars details.bar-d'), function (d) {
+    var k = (d.getAttribute('style').match(/--c-(\w+)/) || [])[1]; if (!k) return;
+    cats[k] = { fill: d.querySelector('.track .fill'), v: d.querySelector('summary .v'), cnt: d.querySelector('summary .cnt') };
+  });
+  function fmt(m) { m = Math.round(m); return Math.floor(m / 60) + 'h ' + String(m % 60).padStart(2, '0') + 'm'; }
+  function drawBars(ms, x, reached, final) {
+    var sum = {};
+    Object.keys(cats).forEach(function (k) { sum[k] = { m: 0, n: 0 }; });
+    BUILDS.forEach(function (b, i) {
+      if (!sum[b[1]]) return;
+      if (reached[i] == null && b[0] <= x + 0.5) reached[i] = ms;
+      if (final) { sum[b[1]].m += b[2]; sum[b[1]].n++; return; }
+      if (reached[i] == null) return;
+      sum[b[1]].m += b[2] * ease(Math.min(1, (ms - reached[i]) / 800)); sum[b[1]].n++;
+    });
+    Object.keys(cats).forEach(function (k) {
+      var c = cats[k], s1 = sum[k];
+      c.fill.style.width = (s1.m / MAXMIN * 100) + '%';
+      c.v.textContent = fmt(s1.m);
+      c.cnt.textContent = s1.n;
+    });
+  }
+
+  function playTimeline() {
+    var a = setupTimeline(); if (!a) return;
+    if (svg._job) live.delete(svg._job);
+    var X0 = 44, SPEED = 0.12, PAUSE = 2600, phases = [], px = X0, total = 0;
+    MONTH_X.forEach(function (mx, i) {
+      var d = Math.max(600, (mx - px) / SPEED);
+      phases.push({ kind: 'draw', from: px, to: mx, t0: total, d: d }); total += d;
+      phases.push({ kind: 'pause', at: mx, i: i, t0: total, d: PAUSE }); total += PAUSE;
+      px = mx;
+    });
+    items.forEach(function (li) { li.hidden = true; li.classList.remove('in', 'cur'); });
+    var shown = -1, reached = [];
+    svg._job = tween(total, function (t) {
+      var ms = t * total, x = X0, pause = -1, last = -1;
+      for (var k = 0; k < phases.length; k++) {
+        var ph = phases[k];
+        if (ms < ph.t0) break;
+        if (ph.kind === 'draw') x = ph.from + (ph.to - ph.from) * ease(Math.min(1, (ms - ph.t0) / ph.d));
+        else { x = ph.at; last = ph.i; if (ms < ph.t0 + ph.d) pause = ph.i; }
+      }
+      var final = t >= 1;
+      if (final) x = 640;
+      a.rect.setAttribute('width', x + 2);
+      a.dots.forEach(function (d) {
+        var on = d.x <= x + 0.5, age = (x - d.x) / 14;
+        d.el.style.opacity = on ? 1 : 0;
+        d.el.style.transform = on && age < 1 ? 'scale(' + (1 + 0.7 * (1 - age)) + ')' : '';
+      });
+      a.marks.forEach(function (m, i) {
+        var on = final || i <= last;
+        m.els.forEach(function (n) { if (n) { n.style.transition = 'opacity .3s'; n.style.opacity = on ? 1 : 0; } });
+        m.els[0].setAttribute('r', i === pause ? 3.5 + 2 * Math.abs(Math.sin(ms / 260)) : 3.5);
+      });
+      drawBars(ms, x, reached, final);
+      if (final) { items.forEach(function (li) { li.hidden = false; li.classList.remove('cur'); }); return; }
+      while (shown < last) { shown++; showItem(shown); }
+    });
+  }
+  if (svg) { svg.style.cursor = 'pointer'; svg.addEventListener('click', playTimeline); }
+
+  var map = [['.stats', playStats], ['.cum', playTimeline]];
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); e.target._play(); } });
+  }, { threshold: 0.35 });
+  map.forEach(function (m) { var el = document.querySelector(m[0]); if (el) { el._play = m[1]; io.observe(el); } });
+})();
 </script>
 </body>
 </html>
