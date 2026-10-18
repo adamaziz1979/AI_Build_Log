@@ -250,10 +250,9 @@ footer{color:var(--muted);font-size:.8rem}
   <div class="stats">
     <div class="stat"><b class="num">17</b><span>Builds: 14 Claude Code, 3 ChatGPT</span></div>
     <div class="stat"><b class="num">~25h 10m</b><span>Claude Code build time (ChatGPT not recorded)</span></div>
-    <div class="stat"><b class="num">12</b><span>Build days, 26 Jul to 18 Oct</span></div>
     <div class="stat"><b class="num">~1h 48m</b><span>Average per Claude Code build</span></div>
-    <div class="stat"><b class="num">52 · ~5h 55m</b><span>Claude Code runs and total run time</span></div>
-  </div>
+    <div class="stat"><b class="num" id="stat-sf">12 vs 2</b><span id="stat-sf-note">Success vs failures: running vs issues being addressed (3 in development)</span></div>
+    <div class="stat"><b class="num">52 · ~5h 55m</b><span>Claude Code runs and total run time</span></div>  </div>
 
   <div class="tally" id="tally">
     <h2>Status</h2>
@@ -661,7 +660,7 @@ document.addEventListener('click', function (e) {
   function counter(node) {
     var src = node.textContent;
     return function (e) {
-      node.textContent = e >= 1 ? src : src.replace(/(\d+)h (\d+)m|\d+/g, function (m, h, mm) {
+      node.textContent = e >= 1 ? (node.dataset.final || src) : src.replace(/(\d+)h (\d+)m|\d+/g, function (m, h, mm) {
         if (h != null) { var tot = Math.round((+h * 60 + +mm) * e); return Math.floor(tot / 60) + 'h ' + String(tot % 60).padStart(2, '0') + 'm'; }
         return String(Math.round(+m * e));
       });
