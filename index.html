@@ -90,9 +90,16 @@ a.jump{display:inline-block;margin:2px 10px 10px 25px;font-size:.78rem;color:var
 .chip::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
 
 .cat{display:grid;gap:12px;scroll-margin-top:16px}
+.cat+.cat{margin-top:-18px}
 .cat.flash .cat-head{animation:flash 1.6s ease-out}
 @keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
 @media (prefers-reduced-motion:reduce){.cat.flash .cat-head{animation:none}}
+.cat-d>summary{list-style:none;cursor:pointer}
+.cat-d>summary::-webkit-details-marker{display:none}
+.cat-d>summary:hover h2{color:var(--c)}
+.cat-d>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:4px}
+.cat-head h2{display:inline-flex;align-items:center;gap:10px}
+.cat-d[open]>summary{margin-bottom:12px}
 .cat-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:2px solid var(--c);padding-bottom:8px}
 .cat-head p{margin:0;color:var(--muted);font-size:.88rem}
 .table-scroll{overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:10px}
@@ -269,7 +276,7 @@ footer{color:var(--muted);font-size:.8rem}
 
   <!-- Personal brand -->
   <section id="cat-brand" class="cat" style="--c:var(--c-brand)">
-    <div class="cat-head"><h2>Personal brand</h2><p>1 build · ~8h 30m · showing your experience to employers</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Personal brand</h2><p>1 build · ~8h 30m · showing your experience to employers</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -286,11 +293,12 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Live at adamaziz1979.github.io/AdamAziz_DataProfessional</li><li>26 updates published, 30 Jul to 10 Sep</li><li>Used as evidence in every Company Brief</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>First upload was missing its CSS, script and resume files; now built into one index.html</li><li>Timeline section removed on 2 Aug until it is ready</li><li>Visit alert routine built 14 Aug, switched off since 15 Aug</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <!-- Career -->
   <section id="cat-career" class="cat" style="--c:var(--c-career)">
-    <div class="cat-head"><h2>Career &amp; job search</h2><p>7 builds (4 Claude Code, 3 ChatGPT) · 3h 00m in Claude Code · finding roles and preparing for interviews</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Career &amp; job search</h2><p>7 builds (4 Claude Code, 3 ChatGPT) · 3h 00m in Claude Code · finding roles and preparing for interviews</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -367,11 +375,12 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>4 HTML reports from one approved template</li><li>Executive infographic and labelled share-price chart in every report</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Original font was hard to scan; switched to Lexend after comparing 8 options</li><li>Share-price chart needed at least 5 labelled turning points</li><li>Company website link added top-right after review</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <!-- Sport -->
   <section id="cat-sport" class="cat" style="--c:var(--c-sport)">
-    <div class="cat-head"><h2>Sport &amp; community</h2><p>3 builds · ~9h 55m · ACCA dragon boat and Junior Touch Footy</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Sport &amp; community</h2><p>3 builds · ~9h 55m · ACCA dragon boat and Junior Touch Footy</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -408,11 +417,12 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Coach app live at v70 after 26 updates in 3 days</li><li>Front rows always XP5/4, XP4/5, XP3/3 in testing; left/right within 1 to 3 kg</li><li>Frozen public demo shared in a <a href="https://www.linkedin.com/feed/update/urn:li:activity:7516640230955716609/" target="_blank" rel="noopener">LinkedIn post</a></li><li>Roster CSV template for coaches</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Stack Team App has no public API, so attendance is ticked by hand</li><li>BOM terms block reusing forecasts, so the app links to BOM instead</li><li>Lone paddlers in rows 9 and 10 slipped past the weight-partner rule; fixed with a half-row penalty</li><li>Coach app and demo share one github.io address and clear each other's offline cache; fix due in the next update</li><li>Needs to move to Cloudflare so only approved coaches can open it</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <!-- Publishing -->
   <section id="cat-pub" class="cat" style="--c:var(--c-pub)">
-    <div class="cat-head"><h2>Publishing</h2><p>3 builds · 0h 50m · getting HTML reports live on GitHub Pages</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Publishing</h2><p>3 builds · 0h 50m · getting HTML reports live on GitHub Pages</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -449,11 +459,12 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Main tool for updating live briefs, heavy use 12 to 13 Oct</li><li>Confirms the live page rebuilt</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Some companies have more than one repo; it now asks instead of guessing</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <!-- Home -->
   <section id="cat-home" class="cat" style="--c:var(--c-home)">
-    <div class="cat-head"><h2>Home monitoring</h2><p>1 build · 0h 35m · home internet performance</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Home monitoring</h2><p>1 build · 0h 35m · home internet performance</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -470,11 +481,12 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Live report at internet_speed_report on GitHub Pages</li><li>Slot averages that match the published page</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Only 11 good readings logged since 19 Aug; 27 test samples failed</li><li>Pinned server was dropped, so tests drifted to Melbourne, Perth and Brisbane</li><li>Unreachable hosts returned 1.8M to 3.6M ms pings; now excluded</li><li>Sydney-only rule skipped 5 runs on 14 to 15 Oct</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <!-- Daily -->
   <section id="cat-daily" class="cat" style="--c:var(--c-daily)">
-    <div class="cat-head"><h2>Daily productivity</h2><p>1 build · 0h 15m · planning the day</p></div>
+    <details class="cat-d"><summary class="cat-head"><h2><span class="chev" aria-hidden="true"></span>Daily productivity</h2><p>1 build · 0h 15m · planning the day</p></summary>
     <div class="table-scroll"><table>
       <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c10"><col class="c5"></colgroup>
       <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Version updates</th><th>Results and obstacles</th></tr></thead>
@@ -491,6 +503,7 @@ footer{color:var(--muted);font-size:.8rem}
           <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>One command for today's brief and calendar</li><li>Offers the rest of the week, flagging interviews</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>No major obstacles</li><li>Added a re-check so today's calendar never comes back empty</li></ul></div></td></tr>
       </tbody>
     </table></div>
+    </details>
   </section>
 
   <section class="notes assess">
@@ -531,6 +544,7 @@ document.addEventListener('click', function (e) {
   var el = document.getElementById(a.getAttribute('href').slice(1));
   if (!el) return;
   e.preventDefault();
+  var d = el.querySelector('details.cat-d'); if (d) d.open = true;
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
   el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
