@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en-AU" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="16 AI builds by Adam Aziz in Claude Code and ChatGPT: build dates, build time, usage, results, obstacles and status.">
+<title>AI Brain Build Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+/* Layout: single reading column, summary strip, category bars, build timeline, then one table per category */
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --fg:#17202b; --muted:#5b6675; --line:#dfe3e9;
+  --accent:#1f4fd1; --accent-soft:#e7edfc;
+  --c-career:#1f4fd1; --c-pub:#0f8a6c; --c-sport:#c2410c; --c-daily:#7c3aed; --c-home:#a16207; --c-brand:#be185d; --ok:#15803d; --warn:#b45309; --cc:#b4532a; --gpt:#0e7c66; --s-run:#15803d; --s-dev:#1f4fd1; --s-issue:#b91c1c;
+  --font-body:"Lexend",Arial,sans-serif; --font-mono:"IBM Plex Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --surface:#161d27; --fg:#e7ebf1; --muted:#97a3b3; --line:#2a3442;
+  --accent:#7aa2ff; --accent-soft:#1c2a4a;
+  --c-career:#7aa2ff; --c-pub:#4cc9a4; --c-sport:#fb8a52; --c-daily:#b28cff; --c-home:#e0b84a; --c-brand:#f472b6; --ok:#5fd38d; --warn:#f2a65a; --cc:#f0946a; --gpt:#4fd1b0; --s-run:#5fd38d; --s-dev:#7aa2ff; --s-issue:#f87171;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --surface:#161d27; --fg:#e7ebf1; --muted:#97a3b3; --line:#2a3442;
+  --accent:#7aa2ff; --accent-soft:#1c2a4a;
+  --c-career:#7aa2ff; --c-pub:#4cc9a4; --c-sport:#fb8a52; --c-daily:#b28cff; --c-home:#e0b84a; --c-brand:#f472b6; --ok:#5fd38d; --warn:#f2a65a; --cc:#f0946a; --gpt:#4fd1b0; --s-run:#5fd38d; --s-dev:#7aa2ff; --s-issue:#f87171;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-weight:300;font-size:15px;line-height:1.55}
+.wrap{max-width:1440px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:40px}
+h1,h2,h3{text-wrap:balance;margin:0;font-weight:600;letter-spacing:-0.01em}
+h1{font-size:clamp(1.7rem,4vw,2.3rem)}
+h2{font-size:1.25rem}
+h3{font-size:1rem}
+.eyebrow{font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+header{display:grid;gap:10px}
+header p{margin:0;color:var(--muted);max-width:68ch}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--font-mono)}
+
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:18px 18px 16px;display:grid;gap:4px}
+.stat b{font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{color:var(--muted);font-size:.85rem}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+section{display:grid;gap:16px;align-content:start}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px}
+@media (max-width:760px){.split{grid-template-columns:minmax(0,1fr)}}
+
+.bars{display:grid;gap:12px}
+.bar{display:grid;grid-template-columns:190px minmax(0,1fr) 64px;gap:12px;align-items:center;font-size:.9rem}
+.bars{gap:4px}
+details.bar-d{border-radius:8px}
+details.bar-d[open]{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+summary.bar{list-style:none;cursor:pointer;padding:8px 10px;border-radius:8px}
+summary.bar::-webkit-details-marker{display:none}
+summary.bar:hover{background:var(--surface)}
+summary.bar:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lbl{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.chev{width:7px;height:7px;flex:none;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .15s}
+details[open] .chev{transform:rotate(45deg)}
+.cnt{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:0 6px;line-height:1.5}
+ul.builds{list-style:none;margin:0;padding:4px 10px 6px 25px;display:grid;gap:8px}
+ul.builds li{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(50px,130px) 100px;gap:10px;align-items:center;font-size:.84rem}
+.bn{min-width:0;overflow-wrap:anywhere}
+.mini{height:6px;background:var(--line);border-radius:2px;overflow:hidden}
+.mini .fill{height:100%;background:var(--c)}
+.mini.none{background:repeating-linear-gradient(90deg,var(--line) 0 4px,transparent 4px 8px)}
+.bt{text-align:right;font-family:var(--font-mono);font-size:.78rem;color:var(--fg);white-space:nowrap}
+.bt.unrec{color:var(--muted)}
+a.jump{display:inline-block;margin:2px 10px 10px 25px;font-size:.78rem;color:var(--c)}
+@media (prefers-reduced-motion:reduce){.chev{transition:none}}
+@media (max-width:520px){ul.builds li{grid-template-columns:minmax(0,1fr) auto 96px} ul.builds .mini{display:none}}
+.bar .track{height:12px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--c)}
+.bar .v{text-align:right;font-family:var(--font-mono);font-size:.82rem;color:var(--muted)}
+@media (max-width:420px){.bar{grid-template-columns:140px minmax(0,1fr) 52px;gap:8px}}
+
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0;border-left:2px solid var(--line);margin-left:6px}
+.timeline li{position:relative;padding:0 0 14px 20px;display:grid;gap:2px}
+.timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--c);border:2px solid var(--bg)}
+.timeline .d{font-family:var(--font-mono);font-size:.78rem;color:var(--muted)}
+.timeline .w{font-size:.92rem}
+
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:500;color:var(--c)}
+.chip::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
+
+.cat{display:grid;gap:12px;scroll-margin-top:16px}
+.cat.flash .cat-head{animation:flash 1.6s ease-out}
+@keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.cat.flash .cat-head{animation:none}}
+.cat-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;border-bottom:2px solid var(--c);padding-bottom:8px}
+.cat-head p{margin:0;color:var(--muted);font-size:.88rem}
+.table-scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{width:100%;table-layout:fixed;border-collapse:collapse;min-width:1300px;font-size:.88rem}
+th,td{text-align:left;vertical-align:top;padding:16px 16px;line-height:1.5;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+th{font-family:var(--font-mono);font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--bg)}
+td.cmd{font-family:var(--font-mono);font-weight:500;white-space:normal;overflow-wrap:anywhere;color:var(--c)}
+td.cmd small{display:block;font-family:var(--font-body);font-weight:300;color:var(--muted);font-size:.75rem}
+td.use,td.run{font-variant-numeric:tabular-nums}
+td.use b,td.run b{font-weight:600}
+td.use small,td.run small{display:block;color:var(--muted);font-size:.75rem}
+td.when,td.time{white-space:normal;font-variant-numeric:tabular-nums}
+td.time b{font-weight:600}
+td.time small,td.when small{display:block;color:var(--muted);font-size:.75rem}
+td ul{margin:0;padding-left:16px;display:grid;gap:6px}
+col.c1{width:11%} col.c6{width:8%} col.c7{width:11%} col.c2{width:19%} col.c3{width:8%} col.c4{width:9%} col.c8{width:7%} col.c9{width:7%} col.c5{width:20%}
+
+.tag{display:inline-block;font-family:var(--font-mono);font-size:.7rem;font-weight:500;padding:2px 7px;border-radius:4px;white-space:nowrap;border:1px solid currentColor}
+.tag.cc{color:var(--cc)} .tag.gpt{color:var(--gpt)}
+td.plat small{display:block;color:var(--muted);font-size:.72rem;margin-top:4px;white-space:normal}
+td.cmd.gpt{color:var(--gpt);white-space:normal}
+.unrec{color:var(--muted);font-weight:500}
+td.cmd a{color:inherit;text-decoration-thickness:1px;text-underline-offset:3px}
+.sb{display:inline-block;font-size:.76rem;font-weight:500;line-height:1.35;padding:6px 9px;border-radius:6px;border:1px solid var(--line);border-left:4px solid var(--c,var(--muted));background:var(--surface)}
+.sb[data-v="running"]{--c:var(--s-run)} .sb[data-v="development"]{--c:var(--s-dev)} .sb[data-v="issues"]{--c:var(--s-issue)}
+@media (max-width:900px){
+  .table-scroll{overflow:visible;background:none;border:none;border-radius:0}
+  table{min-width:0;display:block}
+  colgroup,thead{display:none}
+  tbody{display:grid;gap:14px}
+  tr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  td{display:block;border-bottom:1px solid var(--line);padding:12px 14px;min-width:0}
+  td::before{content:attr(data-label);display:block;font-family:var(--font-mono);font-size:.66rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+  td.cmd{grid-column:1 / -1;font-size:1rem;background:var(--bg)}
+  td.cmd::before{display:none}
+  td.plat,td.when,td.use{border-right:1px solid var(--line)}
+  td[data-label="What it does"],td.ro{grid-column:1 / -1}
+  tr td:last-child{border-bottom:none}
+}
+@media (max-width:420px){
+  tr{grid-template-columns:minmax(0,1fr)}
+  td.plat,td.when,td.use{border-right:none}
+}
+select.status{width:100%;min-width:0;font:500 .78rem/1.3 var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:6px;padding:7px 8px;cursor:pointer}
+select.status:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+select.status:disabled{cursor:default;opacity:.75}
+select.status[data-v="running"]{border-left-color:var(--s-run)}
+select.status[data-v="development"]{border-left-color:var(--s-dev)}
+select.status[data-v="issues"]{border-left-color:var(--s-issue)}
+td.st .saved{display:block;min-height:1em;margin-top:4px;font-family:var(--font-mono);font-size:.68rem;color:var(--muted)}
+.tally{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.tally h2{font-size:1rem;margin-right:6px}
+.tally .t{display:inline-flex;align-items:center;gap:8px;font-size:.88rem}
+.tally .t b{font-weight:600;font-variant-numeric:tabular-nums}
+.tally .t::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--c)}
+.tally p{flex-basis:100%;margin:0;color:var(--muted);font-size:.8rem}
+.ro{display:grid;gap:10px;overflow-wrap:anywhere}
+.tag{max-width:100%}
+.ro-g{display:grid;gap:4px}
+.ro-g>span{font-family:var(--font-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
+.ro-g.ok>span{color:var(--ok)} .ro-g.ob>span{color:var(--warn)}
+.ro-g.ok li::marker{color:var(--ok)} .ro-g.ob li::marker{color:var(--warn)}
+.notes{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px 22px;display:grid;gap:10px}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--muted);font-size:.88rem}
+.notes strong{color:var(--fg);font-weight:500}
+footer{color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Claude Code + ChatGPT · Custom build log · 18 Oct 2026</div>
+    <h1>16 builds across Claude Code and ChatGPT</h1>
+    <p>Everything Adam has built: 13 in Claude Code (a portfolio website, a seat planner web app, 10 skills and 1 agent) and 3 in ChatGPT (1 plugin skill, 2 scheduled tasks), from the portfolio site and job scanner in late July to the Junior Touch Footy poll on 16 Oct. Grouped into 6 categories, with build dates, hands-on build time, and what each one has delivered and run into, taken from session logs, run logs and output folders.</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b class="num">16</b><span>Builds: 13 Claude Code, 3 ChatGPT</span></div>
+    <div class="stat"><b class="num">~23h 05m</b><span>Claude Code build time (ChatGPT not recorded)</span></div>
+    <div class="stat"><b class="num">11</b><span>Build days, 26 Jul to 16 Oct</span></div>
+    <div class="stat"><b class="num">~1h 45m</b><span>Average per Claude Code build</span></div>
+    <div class="stat"><b class="num">52 · ~5h 55m</b><span>Claude Code runs and total run time</span></div>
+  </div>
+
+  <div class="tally" id="tally">
+    <h2>Status</h2>
+    <span class="t" style="--c:var(--s-run)">Completed &amp; running <b>11</b></span>
+    <span class="t" style="--c:var(--s-dev)">In development <b>2</b></span>
+    <span class="t" style="--c:var(--s-issue)">Issues being addressed <b>2</b></span>
+    <span class="t" style="--c:var(--line)">Not set <b>1</b></span>
+    <p>Status as at 18 Oct 2026, set by Adam.</p>
+  </div>
+
+  <div class="split">
+    <section>
+      <h2>Claude Code build time by category</h2>
+      <div class="bars">
+        <details class="bar-d" style="--c:var(--c-sport)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Sport &amp; community <span class="cnt">3</span></span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v num">9h 55m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">ACCA Seat Planner</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:79%"></div></div><span class="bt">~7h 50m</span></li>
+            <li><span class="bn">Junior Touch Footy poll</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:15.1%"></div></div><span class="bt">~1h 30m</span></li>
+            <li><span class="bn">/create_acca_infosheet</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:5.9%"></div></div><span class="bt">~35m</span></li>
+          </ul>
+          <a class="jump" href="#cat-sport">Go to the Sport &amp; community table ↓</a>
+        </details>
+        <details class="bar-d" style="--c:var(--c-brand)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Personal brand <span class="cnt">1</span></span><div class="track"><div class="fill" style="width:85.7%"></div></div><span class="v num">8h 30m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">Portfolio website</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:85.7%"></div></div><span class="bt">~8h 30m</span></li>
+          </ul>
+          <a class="jump" href="#cat-brand">Go to the Personal brand table ↓</a>
+        </details>
+        <details class="bar-d" style="--c:var(--c-career)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Career &amp; job search <span class="cnt">7</span></span><div class="track"><div class="fill" style="width:30.3%"></div></div><span class="v num">3h 00m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">/job-scanner</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:11.8%"></div></div><span class="bt">~1h 10m</span></li>
+            <li><span class="bn">/build-company-brief</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:7.6%"></div></div><span class="bt">~45m</span></li>
+            <li><span class="bn">/build-html-report</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:7.6%"></div></div><span class="bt">~45m</span></li>
+            <li><span class="bn">Company Briefs agent</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:3.4%"></div></div><span class="bt">~20m</span></li>
+            <li><span class="bn">6am Daily Priority Briefing</span><span class="tag gpt">ChatGPT</span><div class="mini none"></div><span class="bt unrec">Not recorded</span></li>
+            <li><span class="bn">Tier 1/2 Jobs V2</span><span class="tag gpt">ChatGPT</span><div class="mini none"></div><span class="bt unrec">Not recorded</span></li>
+            <li><span class="bn">Company Research &amp; Brief</span><span class="tag gpt">ChatGPT</span><div class="mini none"></div><span class="bt unrec">Not recorded</span></li>
+          </ul>
+          <a class="jump" href="#cat-career">Go to the Career &amp; job search table ↓</a>
+        </details>
+        <details class="bar-d" style="--c:var(--c-pub)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Publishing <span class="cnt">3</span></span><div class="track"><div class="fill" style="width:8.4%"></div></div><span class="v num">0h 50m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">/publish-to-github</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:5%"></div></div><span class="bt">~30m</span></li>
+            <li><span class="bn">/create-repo</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:1.7%"></div></div><span class="bt">~10m</span></li>
+            <li><span class="bn">/update-github</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:1.7%"></div></div><span class="bt">~10m</span></li>
+          </ul>
+          <a class="jump" href="#cat-pub">Go to the Publishing table ↓</a>
+        </details>
+        <details class="bar-d" style="--c:var(--c-home)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Home monitoring <span class="cnt">1</span></span><div class="track"><div class="fill" style="width:5.9%"></div></div><span class="v num">0h 35m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">/speed-report</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:5.9%"></div></div><span class="bt">~35m</span></li>
+          </ul>
+          <a class="jump" href="#cat-home">Go to the Home monitoring table ↓</a>
+        </details>
+        <details class="bar-d" style="--c:var(--c-daily)">
+          <summary class="bar"><span class="lbl"><span class="chev" aria-hidden="true"></span>Daily productivity <span class="cnt">1</span></span><div class="track"><div class="fill" style="width:2.5%"></div></div><span class="v num">0h 15m</span></summary>
+          <ul class="builds">
+            <li><span class="bn">/whats-on-today</span><span class="tag cc">Claude Code</span><div class="mini"><div class="fill" style="width:2.5%"></div></div><span class="bt">~15m</span></li>
+          </ul>
+          <a class="jump" href="#cat-daily">Go to the Daily productivity table ↓</a>
+        </details>
+      </div>
+      <p class="eyebrow" style="margin:0">Select a category to see its builds. Numbers show builds per category.</p>
+    </section>
+
+    <section>
+      <h2>Build timeline</h2>
+      <ol class="timeline">
+        <li style="--c:var(--c-brand)"><span class="d">26 Jul to 10 Sep</span><span class="w">Portfolio website (live 30 Jul)</span></li>
+        <li style="--c:var(--c-career)"><span class="d">26 to 28 Jul</span><span class="w">/job-scanner</span></li>
+        <li style="--c:var(--c-pub)"><span class="d">27 Jul</span><span class="w">/publish-to-github</span></li>
+        <li style="--c:var(--c-daily)"><span class="d">28 Jul</span><span class="w">/whats-on-today</span></li>
+        <li style="--c:var(--c-home)"><span class="d">19 Aug</span><span class="w">/speed-report</span></li>
+        <li style="--c:var(--c-career)"><span class="d">1 Sep</span><span class="w">6am Daily Priority Briefing, Tier 1/2 Jobs V2 <span class="tag gpt">ChatGPT</span></span></li>
+        <li style="--c:var(--c-career)"><span class="d">25 to 28 Sep</span><span class="w">Company Research &amp; Brief plugin (v0.3.1 to v0.3.2) <span class="tag gpt">ChatGPT</span></span></li>
+        <li style="--c:var(--c-career)"><span class="d">28 to 29 Sep</span><span class="w">Company Briefs agent, /build-company-brief, /build-html-report</span></li>
+        <li style="--c:var(--c-pub)"><span class="d">29 Sep</span><span class="w">/create-repo, /update-github</span></li>
+        <li style="--c:var(--c-sport)"><span class="d">10 Oct</span><span class="w">/create_acca_infosheet</span></li>
+        <li style="--c:var(--c-sport)"><span class="d">12 to 16 Oct</span><span class="w">ACCA Seat Planner app (live 12 Oct)</span></li>
+        <li style="--c:var(--c-sport)"><span class="d">13 to 16 Oct</span><span class="w">Junior Touch Footy poll</span></li>
+      </ol>
+    </section>
+  </div>
+
+  <!-- Personal brand -->
+  <section id="cat-brand" class="cat" style="--c:var(--c-brand)">
+    <div class="cat-head"><h2>Personal brand</h2><p>1 build · ~8h 30m · showing your experience to employers</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command"><a href="https://adamaziz1979.github.io/AdamAziz_DataProfessional/" target="_blank" rel="noopener">Portfolio website</a><small>GitHub Pages site</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="">Not set</span></td>
+          <td data-label="What it does"><ul><li>Personal brand site: career track, headline stats, capability stories, skills and certifications</li><li>Resume links served from the GitHub repo</li><li>Links to the Data Strategy &amp; Evolution page</li><li>Visits tracked with GoatCounter</li></ul></td>
+          <td class="when" data-label="Developed">26 Jul 2026<small>Live 30 Jul</small><small>Last update 10 Sep</small></td>
+          <td class="time" data-label="Build time"><b>~8h 30m</b><small>Over 13 sittings, 26 Jul to 10 Sep</small></td>
+          <td class="use" data-label="Times used"><b>27</b><small>page views since 14 Aug</small></td>
+          <td class="run" data-label="Total run time"><span class="unrec">Always on</span><small>Website, no run time</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Live at adamaziz1979.github.io/AdamAziz_DataProfessional</li><li>26 updates published, 30 Jul to 10 Sep</li><li>Used as evidence in every Company Brief</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>First upload was missing its CSS, script and resume files; now built into one index.html</li><li>Timeline section removed on 2 Aug until it is ready</li><li>Visit alert routine built 14 Aug, switched off since 15 Aug</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- Career -->
+  <section id="cat-career" class="cat" style="--c:var(--c-career)">
+    <div class="cat-head"><h2>Career &amp; job search</h2><p>7 builds (4 Claude Code, 3 ChatGPT) · 3h 00m in Claude Code · finding roles and preparing for interviews</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command">/job-scanner<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="issues">Issues being addressed</span></td>
+          <td data-label="What it does"><ul><li>Daily scan of SEEK, Michael Page, LinkedIn, Indeed, Employment Hero, Greenhouse and other job sites</li><li>Only roles posted in the last 24 hours or 7 days</li><li>Labels each role new, refreshed or still active, then rates it Tier 1 or 2</li><li>Logs every role in <span class="mono">tracker.csv</span> (156 seen so far)</li></ul></td>
+          <td class="when" data-label="Developed">26 Jul 2026<small>Live 28 Jul</small></td>
+          <td class="time" data-label="Build time"><b>~1h 10m</b><small>Over 3 days, incl. Chrome fixes</small><small>+~25m refinement 10 Oct</small></td>
+          <td class="use" data-label="Times used"><b>15</b><small>12 scheduled, 3 manual</small></td>
+          <td class="run" data-label="Total run time"><b>~2h 05m</b><small>Claude working time</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>12 scan reports, 27 Jul to 10 Oct</li><li>156 roles tracked, deduplicated across sites</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Claude in Chrome permission bug in Jul; added a web search fallback</li><li>Michael Page dashboard is login-only, so it gets skipped in fallback mode</li><li>Old cached listings showed up; limited results to the last 24 hours and 7 days</li><li>Daily schedule is now switched off (last run 14 Oct)</li></ul></div></td></tr>
+        <tr><td class="cmd gpt" data-label="Command">6am Daily Priority Briefing<small>Scheduled task</small></td>
+          <td class="plat" data-label="Built in"><span class="tag gpt">ChatGPT</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Morning job-search briefing: fresh roles, recruiter email updates and priority actions</li><li>Only roles posted in the last 1 to 2 days</li><li>Tracks application status changes</li></ul></td>
+          <td class="when" data-label="Developed">1 Sep 2026<small>Chat created 6:03am</small><small>Scheduler date unknown</small></td>
+          <td class="time" data-label="Build time"><b class="unrec">Not recorded</b><small>Refined Sep to Oct</small></td>
+          <td class="use" data-label="Times used"><b>~48</b><small>Daily since 1 Sep, not verified</small></td>
+          <td class="run" data-label="Total run time"><span class="unrec">Not recorded</span></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Daily outputs through 18 Oct</li><li>17 Oct: 5 fresh roles (3 permanent, 2 fixed-term)</li><li>18 Oct: Uber application acknowledged, Scyne Advisory rejection</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Old or refreshed ads shown as new; now checks original posting dates</li><li>Removed vacancies and incomplete email evidence</li><li>Scheduler status and time saved not verified</li></ul></div></td></tr>
+        <tr><td class="cmd gpt" data-label="Command">Tier 1/2 Jobs V2<small>Scheduled task</small></td>
+          <td class="plat" data-label="Built in"><span class="tag gpt">ChatGPT</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>5pm review of permanent and contract, interim or fixed-term roles, ranked by fit</li><li>Reports application pipeline changes</li></ul></td>
+          <td class="when" data-label="Developed">1 Sep 2026<small>Chat created 4:58pm</small><small>Scheduler date unknown</small></td>
+          <td class="time" data-label="Build time"><b class="unrec">Not recorded</b><small>Refined Sep to Oct</small></td>
+          <td class="use" data-label="Times used"><b>~47</b><small>Daily since 1 Sep, not verified</small></td>
+          <td class="run" data-label="Total run time"><span class="unrec">Not recorded</span></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Outputs through 17 Oct</li><li>17 Oct: 1 provisional permanent role, 0 contract roles, Scyne Advisory rejection</li><li>Labels conflicting ad dates instead of over-claiming</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Posting dates conflict across job sites</li><li>Strict criteria give far fewer than the target 10 roles per lane</li><li>Overlaps with the 6am briefing</li><li>Latest run asked whether to keep going; status not confirmed</li></ul></div></td></tr>
+        <tr><td class="cmd gpt" data-label="Command">Company Research &amp; Brief<small>Plugin skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag gpt">ChatGPT</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Company research, executive briefings and interview dossiers tailored to role and candidate</li><li>Two-stage briefing with explicit evidence classifications</li><li>Since v0.3.2: pay, headcount, market benchmarks and salary-expectation wording</li></ul></td>
+          <td class="when" data-label="Developed">25 Sep 2026<small>v0.3.1; v0.3.2 on 28 Sep</small><small>Workflow may be older</small></td>
+          <td class="time" data-label="Build time"><b class="unrec">Not recorded</b><small>v0.3.2 update: ~2m agent run</small></td>
+          <td class="use" data-label="Times used"><span class="unrec">Not recorded</span></td>
+          <td class="run" data-label="Total run time"><span class="unrec">Not recorded</span></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Reusable installed skill, now at v0.3.2</li><li>Includes 2 Audinate reference reports</li><li>Became the base for /build-company-brief in Claude Code (28 Sep)</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Local headcount and exact-role pay often not public; handled with dated sources, confidence labels and "not publicly disclosed"</li><li>Must separate fact from inference and use the latest resume</li><li>HTML needs a separate approval step</li><li>Time saved and interview outcomes not measured</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">Company Briefs<small>Agent</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Interview-prep researcher you call by name</li><li>Follows /build-company-brief, then hands off to /build-html-report</li><li>Saves to <span class="mono">OneDrive\Documents\Career\[Company]</span></li><li>Never publishes unless you say "create repo" or "Update Github"</li></ul></td>
+          <td class="when" data-label="Developed">28 Sep 2026</td>
+          <td class="time" data-label="Build time"><b>~20m</b><small>Same night as the brief skill</small></td>
+          <td class="use" data-label="Times used"><b>4</b><small>Same runs as /build-company-brief</small></td>
+          <td class="run" data-label="Total run time"><span class="unrec">Included</span><small>Counted under the brief</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Called by name for every interview brief since 28 Sep</li><li>Saves straight to the Career folder</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Agents cannot be opened from the sidebar; you call them by name in chat</li><li>Output folder and resume check had to be added after the first run</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">/build-company-brief<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span><small>Ported from the ChatGPT plugin</small></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Researches company history, turning points, strategy, headcount and pay</li><li>Works out why the role exists now</li><li>Checks your Master Resume, STAR Skills, portfolio and LinkedIn</li><li>Delivers a staged executive briefing, dossier and Stage 3 focus points</li></ul></td>
+          <td class="when" data-label="Developed">28 Sep 2026<small>Final version 29 Sep</small></td>
+          <td class="time" data-label="Build time"><b>~45m</b><small>Built from plugin instructions</small></td>
+          <td class="use" data-label="Times used"><b>4</b><small>Stryker, Toyota Finance, OnDeck, Dynatrace</small></td>
+          <td class="run" data-label="Total run time"><b>~1h 35m</b><small>Claude working time</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>4 interview briefs: Stryker, Toyota Finance, OnDeck, Dynatrace</li><li>Checks resume and STAR dates every time</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Reference links moved from each major section down to each sub-section</li><li>Stage 3 (top 5 experience points) added after the first draft</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">/build-html-report<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Turns an approved brief into one self-contained HTML report</li><li>Uses the Stryker v2 template: executive infographic, share-price chart with 5+ event labels, Lexend font</li><li>Can regenerate an existing report under the latest rules</li></ul></td>
+          <td class="when" data-label="Developed">28 Sep 2026<small>Final version 29 Sep</small></td>
+          <td class="time" data-label="Build time"><b>~45m</b><small>Refined on the Stryker brief</small></td>
+          <td class="use" data-label="Times used"><b>4</b><small>Plus regenerations in brief sessions</small></td>
+          <td class="run" data-label="Total run time"><b>~40m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>4 HTML reports from one approved template</li><li>Executive infographic and labelled share-price chart in every report</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Original font was hard to scan; switched to Lexend after comparing 8 options</li><li>Share-price chart needed at least 5 labelled turning points</li><li>Company website link added top-right after review</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- Sport -->
+  <section id="cat-sport" class="cat" style="--c:var(--c-sport)">
+    <div class="cat-head"><h2>Sport &amp; community</h2><p>3 builds · ~9h 55m · ACCA dragon boat and Junior Touch Footy</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command">Junior Touch Footy poll<small>Skill + 2 routines</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="development">In Development, Refinements Needed</span></td>
+          <td data-label="What it does"><ul><li>Reads this week's U8 game from the Norths Touch round email</li><li>Handles byes, missing emails and Gmail failures</li><li>Prepares the WhatsApp attendance poll; posts only after you say yes</li><li>Runs Wed 4pm on your PC, with a cloud backup routine (repo <span class="mono">touchfooty</span>)</li></ul></td>
+          <td class="when" data-label="Developed">13 Oct 2026<small>Final version 16 Oct</small></td>
+          <td class="time" data-label="Build time"><b>~1h 30m</b><small>Over 3 days, incl. cloud routine</small></td>
+          <td class="use" data-label="Times used"><b>8</b><small>2 on PC, 6 cloud</small></td>
+          <td class="run" data-label="Total run time"><b>~13m</b><small>Cloud runs ~30s each</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>First poll posted 14 Oct (Round 4 v STW Comets)</li><li>Scheduled run correctly skipped a duplicate poll</li><li>Cloud backup ran successfully 16 Oct</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>WhatsApp desktop app and Edge cannot be driven; it only works in Chrome</li><li>PC routine needs the PC on with Claude and Chrome open</li><li>Cloud routine cannot post to WhatsApp, so it sends the poll text to chat</li><li>"Allow multiple answers" had to be turned off</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">/create_acca_infosheet<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>One-page A4 PDF for ACCA events in the accadbr.com style</li><li>You pick 3 to 5 sections: race schedule, seating, weather, logistics and more</li><li>Pulls from race draws, crew lists and briefing files</li></ul></td>
+          <td class="when" data-label="Developed">10 Oct 2026</td>
+          <td class="time" data-label="Build time"><b>~35m</b><small>First sheet, then saved as a skill</small></td>
+          <td class="use" data-label="Times used"><b>0</b><small>1 sheet made while building it</small></td>
+          <td class="run" data-label="Total run time"><span class="unrec">None yet</span></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>DBNSW Round 1 info sheet (10 Oct), PDF and HTML</li><li>Matches the accadbr.com style</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Team App auto-login not possible: the assistant cannot enter your passwords</li><li>Mobile HTML version dropped in favour of a PDF</li><li>Race table needed realigning against the bullet panel</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command"><a href="https://adamaziz1979.github.io/acca-seat-planner/" target="_blank" rel="noopener">ACCA Seat Planner</a><small>Web app for coaches</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span><small>From a v17 prototype</small></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Builds a balanced seating plan for a 20-seat dragon boat: left/right weight, front/back balance, experience and roles</li><li>Roster, attendance, seat plan and share tabs; swap, lock and re-balance seats</li><li>Shares a names-only boat image with the crew</li><li>Installs on a phone and works offline at the dock</li></ul></td>
+          <td class="when" data-label="Developed">12 Oct 2026<small>Live 12 Oct (v18 to v70)</small><small>Public demo 16 Oct</small></td>
+          <td class="time" data-label="Build time"><b>~7h 50m</b><small>Over 5 days, 12 to 16 Oct</small><small>Prototype time not counted</small></td>
+          <td class="use" data-label="Times used"><span class="unrec">Not tracked</span><small>Runs in coaches' browsers, no analytics</small></td>
+          <td class="run" data-label="Total run time"><b>Under 1 sec</b><small>Per plan: best of 8 runs, ~136,000 seatings checked</small></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Coach app live at v70 after 26 updates in 3 days</li><li>Front rows always XP5/4, XP4/5, XP3/3 in testing; left/right within 1 to 3 kg</li><li>Frozen public demo shared on LinkedIn</li><li>Roster CSV template for coaches</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Stack Team App has no public API, so attendance is ticked by hand</li><li>BOM terms block reusing forecasts, so the app links to BOM instead</li><li>Lone paddlers in rows 9 and 10 slipped past the weight-partner rule; fixed with a half-row penalty</li><li>Coach app and demo share one github.io address and clear each other's offline cache; fix due in the next update</li><li>Needs to move to Cloudflare so only approved coaches can open it</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- Publishing -->
+  <section id="cat-pub" class="cat" style="--c:var(--c-pub)">
+    <div class="cat-head"><h2>Publishing</h2><p>3 builds · 0h 50m · getting HTML reports live on GitHub Pages</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command">/publish-to-github<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Publishes any finished HTML file to GitHub Pages</li><li>Asks new repo or existing, then does the rest</li></ul></td>
+          <td class="when" data-label="Developed">27 Jul 2026</td>
+          <td class="time" data-label="Build time"><b>~30m</b><small>Incl. GitHub CLI sign-in</small></td>
+          <td class="use" data-label="Times used"><b>1</b><small>Later publishing used /create-repo and /update-github</small></td>
+          <td class="run" data-label="Total run time"><b>~20m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>AI Brain Architecture page live on 27 Jul</li><li>Base for the two GitHub skills that followed</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>GitHub CLI needed a one-off sign-in before the first push</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">/create-repo<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Creates a new public repo on adamaziz1979</li><li>Pushes the report as <span class="mono">index.html</span> and turns on Pages</li><li>Checks for existing repos for the same company first</li></ul></td>
+          <td class="when" data-label="Developed">29 Sep 2026</td>
+          <td class="time" data-label="Build time"><b>~10m</b><small>Built with /update-github</small></td>
+          <td class="use" data-label="Times used"><b>5</b></td>
+          <td class="run" data-label="Total run time"><b>~25m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>9 repos created since 29 Sep, including touchfooty and internet_speed_report</li><li>Pages turned on automatically</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>First push failed until GitHub Pages was enabled; now part of the skill</li><li>Duplicate company names (stryker v stryker_claudecode_version) caused confusion; it now checks first</li></ul></div></td></tr>
+        <tr><td class="cmd" data-label="Command">/update-github<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></td>
+          <td data-label="What it does"><ul><li>Replaces <span class="mono">index.html</span> in an existing repo</li><li>Confirms the live page rebuilt</li><li>Asks which repo when more than one matches</li></ul></td>
+          <td class="when" data-label="Developed">29 Sep 2026</td>
+          <td class="time" data-label="Build time"><b>~10m</b><small>Built with /create-repo</small></td>
+          <td class="use" data-label="Times used"><b>4</b><small>By command; plain "Update Github" requests not counted</small></td>
+          <td class="run" data-label="Total run time"><b>~10m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Main tool for updating live briefs, heavy use 12 to 13 Oct</li><li>Confirms the live page rebuilt</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Some companies have more than one repo; it now asks instead of guessing</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- Home -->
+  <section id="cat-home" class="cat" style="--c:var(--c-home)">
+    <div class="cat-head"><h2>Home monitoring</h2><p>1 build · 0h 35m · home internet performance</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command">/speed-report<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="issues">Issues being addressed</span></td>
+          <td data-label="What it does"><ul><li>Summarises speed tests run 4 times a day (9am, 12pm, 3pm, 7pm)</li><li>Averages by time slot, drops bad pings, flags failed runs</li><li>Sydney servers only since 14 Oct</li><li>Matches the live report on GitHub Pages</li></ul></td>
+          <td class="when" data-label="Developed">19 Aug 2026<small>Updated 14 Oct</small></td>
+          <td class="time" data-label="Build time"><b>~35m</b><small>15m build + 20m update</small><small>Collector built separately</small></td>
+          <td class="use" data-label="Times used"><b>9</b></td>
+          <td class="run" data-label="Total run time"><b>~15m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>Live report at internet_speed_report on GitHub Pages</li><li>Slot averages that match the published page</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Only 11 good readings logged since 19 Aug; 27 test samples failed</li><li>Pinned server was dropped, so tests drifted to Melbourne, Perth and Brisbane</li><li>Unreachable hosts returned 1.8M to 3.6M ms pings; now excluded</li><li>Sydney-only rule skipped 5 runs on 14 to 15 Oct</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- Daily -->
+  <section id="cat-daily" class="cat" style="--c:var(--c-daily)">
+    <div class="cat-head"><h2>Daily productivity</h2><p>1 build · 0h 15m · planning the day</p></div>
+    <div class="table-scroll"><table>
+      <colgroup><col class="c1"><col class="c6"><col class="c7"><col class="c2"><col class="c3"><col class="c4"><col class="c8"><col class="c9"><col class="c5"></colgroup>
+      <thead><tr><th>Command</th><th>Built in</th><th>Status</th><th>What it does</th><th>Developed</th><th>Build time</th><th>Times used</th><th>Total run time</th><th>Results and obstacles</th></tr></thead>
+      <tbody>
+        <tr><td class="cmd" data-label="Command">/whats-on-today<small>Skill</small></td>
+          <td class="plat" data-label="Built in"><span class="tag cc">Claude Code</span></td>
+          <td class="st" data-label="Status"><span class="sb" data-v="development">In Development, Refinements Needed</span></td>
+          <td data-label="What it does"><ul><li>Runs the morning brief: inbox, top 3 priorities, loose ends</li><li>Puts today's calendar up front</li><li>Offers the rest of the week, flagging interviews</li></ul></td>
+          <td class="when" data-label="Developed">28 Jul 2026</td>
+          <td class="time" data-label="Build time"><b>~15m</b><small>Single sitting</small></td>
+          <td class="use" data-label="Times used"><b>2</b></td>
+          <td class="run" data-label="Total run time"><b>~10m</b></td>
+          <td class="ro" data-label="Results and obstacles"><div class="ro-g ok"><span>Results</span><ul><li>One command for today's brief and calendar</li><li>Offers the rest of the week, flagging interviews</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>No major obstacles</li><li>Added a re-check so today's calendar never comes back empty</li></ul></div></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="notes assess">
+    <h3>Overall assessment</h3>
+    <ul>
+      <li><strong>Biggest builds:</strong> the portfolio website (about 8h 30m over 13 sittings), which feeds evidence into every Company Brief, and the ACCA Seat Planner (about 7h 50m over 5 days), which went from prototype to v70 in 3 days.</li>
+      <li><strong>Strongest result:</strong> a full interview-prep chain. The ChatGPT research skill was ported into Claude Code on 28 Sep and extended with an HTML report and publishing. It has produced 4 briefs so far.</li>
+      <li><strong>Job scanning runs in 3 places:</strong> /job-scanner in Claude Code (daily schedule off since 14 Oct), plus the ChatGPT 6am and 5pm tasks, which are still producing output. All three hit the same problem: refreshed ads looking new. Settling on one daily scan would remove repeated recommendations.</li>
+      <li><strong>Platform split:</strong> Claude Code handles anything that touches your files, Gmail drafts, WhatsApp, GitHub or a schedule on your PC. ChatGPT handles recurring job-search briefings.</li>
+      <li><strong>Gaps:</strong> no recorded build effort for ChatGPT, no measured time saved, no link from tools to interview outcomes, and the 5pm task's schedule status is not confirmed.</li>
+    </ul>
+  </section>
+
+  <div class="notes">
+    <h3>How the numbers were worked out</h3>
+    <ul>
+      <li><strong>Developed:</strong> the date the skill or agent file was first written, checked against Claude session logs.</li>
+      <li><strong>Build time:</strong> an estimate of hands-on time. It counts active minutes in each session from your first request to the last change to the skill. Breaks longer than 5 minutes are capped at 5 minutes.</li>
+      <li><strong>Not counted:</strong> time spent running a skill after it was built (for example, publishing reports or doing job scans), and supporting pieces built separately, such as the speed-test collector (about 45 min, 19 to 25 Aug).</li>
+      <li><strong>Shared sittings:</strong> Company Briefs, /build-company-brief and /build-html-report were built together on 28 and 29 Sep (about 1h 50m in total). /create-repo and /update-github were built together in about 20 min. Their time is split across the skills.</li>
+      <li><strong>Portfolio website:</strong> time covers the personal brand sessions from 26 Jul to 10 Sep, which also included small related pieces (a role-themes diagram and a link from the Data Strategy &amp; Evolution page). Treat it as within plus or minus 30%.</li>
+      <li><strong>ACCA Seat Planner:</strong> time covers the Claude Code sessions from 12 to 16 Oct. The app started from a v17 prototype built before 12 Oct, which is not counted. Use is not tracked, because the app runs on each coach's phone with no analytics.</li>
+      <li><strong>ChatGPT builds:</strong> dates, results and obstacles come from your own ChatGPT inventory (18 Oct). Build dates are when the related chat was created; build time was not recorded.</li>
+      <li><strong>Results and obstacles:</strong> counts come from output folders, run logs, trackers and your GitHub repo list as at 18 Oct. Obstacles are the problems raised in build sessions and how each was handled.</li>
+      <li><strong>Status:</strong> set by Adam, as at 18 Oct 2026.</li>
+      <li><strong>Times used and run time:</strong> counted from Claude Code session logs, the scheduled task history and the cloud routine history, up to 18 Oct. A use is one slash command or scheduled run. Run time is the time Claude spent working on each run, leaving out time spent waiting on you. Portfolio views come from GoatCounter. ChatGPT counts assume one run a day and have not been checked.</li>
+      <li><strong>Precision:</strong> figures are rounded to the nearest 5 minutes. Treat them as within plus or minus 25%.</li>
+    </ul>
+  </div>
+
+  <footer>Source: <span class="mono">my-skills/</span>, <span class="mono">.claude/agents/</span>, workflow run logs, the Career folder, GitHub, Claude Code session logs and your ChatGPT inventory, read 18 Oct 2026.</footer>
+</div>
+<script>
+document.addEventListener('click', function (e) {
+  var a = e.target.closest && e.target.closest('a.jump');
+  if (!a) return;
+  var el = document.getElementById(a.getAttribute('href').slice(1));
+  if (!el) return;
+  e.preventDefault();
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+});
+</script>
+</body>
+</html>
