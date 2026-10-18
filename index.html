@@ -810,7 +810,7 @@ document.addEventListener('click', function (e) {
 /* Headline background: slow "digital pollen" drifting upward. Pauses off screen and in hidden tabs; one still frame when reduced motion is on. */
 (function () {
   var cv = document.querySelector('header canvas.pollen'); if (!cv || !cv.getContext) return;
-  var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0, P = [], col = '79,157,255', running = false, last = 0, seen = true;
+  var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0, P = [], col = '79,157,255', running = false, last = 0, seen = true, SP = '245,181,68'; /* one warm amber grain, outside the blue palette */
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   function readCol() {
     var c = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(), m;
@@ -822,6 +822,7 @@ document.addEventListener('click', function (e) {
     p.vy = -(4 + Math.random() * 9);                           /* px per second, upward */
     p.sw = 6 + Math.random() * 16; p.sf = 0.05 + Math.random() * 0.12; p.ph = Math.random() * 6.28;
     p.a = 0.24 + Math.random() * 0.46; p.tw = 0.3 + Math.random() * 0.9;
+    if (p.sp) { p.r = 2.6; p.a = 0.9; p.vy = -6; }
     return p;
   }
   function size() {
@@ -829,13 +830,15 @@ document.addEventListener('click', function (e) {
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     var want = Math.round(Math.min(150, Math.max(40, W * H / 5200)));
     while (P.length < want) P.push(seed({}, true)); P.length = want;
+    if (!P[0].sp) { P[0].sp = true; seed(P[0], true); }
   }
   function draw(t) {
     ctx.clearRect(0, 0, W, H);
     for (var i = 0; i < P.length; i++) {
       var p = P[i], x = p.x + Math.sin(t * p.sf + p.ph) * p.sw, a = p.a * (0.65 + 0.35 * Math.sin(t * p.tw + p.ph));
-      if (p.r > 1.3) { ctx.beginPath(); ctx.arc(x, p.y, p.r * 3.2, 0, 6.283); ctx.fillStyle = 'rgba(' + col + ',' + (a * 0.18).toFixed(3) + ')'; ctx.fill(); }
-      ctx.beginPath(); ctx.arc(x, p.y, p.r, 0, 6.283); ctx.fillStyle = 'rgba(' + col + ',' + a.toFixed(3) + ')'; ctx.fill();
+      var c = p.sp ? SP : col;
+      if (p.r > 1.3) { ctx.beginPath(); ctx.arc(x, p.y, p.r * (p.sp ? 4 : 3.2), 0, 6.283); ctx.fillStyle = 'rgba(' + c + ',' + (a * (p.sp ? 0.22 : 0.18)).toFixed(3) + ')'; ctx.fill(); }
+      ctx.beginPath(); ctx.arc(x, p.y, p.r, 0, 6.283); ctx.fillStyle = 'rgba(' + c + ',' + a.toFixed(3) + ')'; ctx.fill();
     }
   }
   function frame(now) {
