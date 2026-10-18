@@ -241,10 +241,8 @@ footer{color:var(--muted);font-size:.8rem}
 /* UX review 19-Oct-26: tap areas (1, 2), touch header height (3), captions (10), solid bubbles */
 a.jump{display:inline-block;padding-block:12.5px;margin-block:-12.5px}
 td a,dd a,.mcol a,.ro a{display:inline-block;padding-block:14px;margin-block:-14px}
-details.more>summary{display:inline-block;padding-block:12px;margin-block:-8px 0;cursor:pointer;color:var(--accent);font-size:.8rem}
-details.more>summary::marker{color:var(--muted)}
-details.more ul{margin:6px 0 0;padding-left:16px;display:grid;gap:4px;color:var(--muted)}
-@media (pointer:coarse){summary.bar,summary.cat-head,details.more>summary{min-height:44px}summary.bar,summary.cat-head{align-items:center}}
+ul.sub{margin:4px 0 0;padding-left:16px;display:grid;gap:3px;color:var(--muted)}
+@media (pointer:coarse){summary.bar,summary.cat-head{min-height:44px}summary.bar,summary.cat-head{align-items:center}}
 section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:0;line-height:1.5;color:var(--muted)}
 .tb-svg .tb circle{fill:var(--c);fill-opacity:1;stroke:none;transition:filter .15s}
 .tb-svg .tb:hover circle,.tb-svg .tb:focus circle,.tb-svg .tb.sel circle{fill-opacity:1;filter:brightness(1.18)}
@@ -573,11 +571,11 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
   <section class="notes assess">
     <h3>Overall assessment</h3>
     <ul>
-      <li><strong>Biggest builds:</strong> the portfolio website (~8h 30m) and the ACCA Seat Planner (~7h 50m).<details class="more"><summary>More</summary><ul><li>The portfolio feeds evidence into every Company Interview Brief.</li><li>The Seat Planner went from prototype to v70 in 3 days.</li></ul></details></li>
-      <li><strong>Strongest result:</strong> a full interview-prep chain that has produced 4 briefs so far.<details class="more"><summary>More</summary><ul><li>The ChatGPT research skill moved to Claude Code on 28 Sep.</li><li>Claude Code added an HTML report and publishing.</li></ul></details></li>
-      <li><strong>Job scanning runs in 3 places:</strong> all three show refreshed ads as new.<details class="more"><summary>More</summary><ul><li>Daily Job Scanner in Claude Code: daily schedule off since 14 Oct.</li><li>ChatGPT 6am and 5pm tasks: still producing output.</li><li>Settling on one daily scan would remove repeated recommendations.</li></ul></details></li>
-      <li><strong>Platform split:</strong> Claude Code handles files, Gmail drafts, WhatsApp, GitHub and PC schedules.<details class="more"><summary>More</summary><ul><li>ChatGPT handles the recurring job-search briefings.</li></ul></details></li>
-      <li><strong>Gaps:</strong> no recorded ChatGPT build effort and no measured time saved.<details class="more"><summary>More</summary><ul><li>No link yet from tools to interview outcomes.</li><li>The 5pm task's schedule status is not confirmed.</li></ul></details></li>
+      <li><strong>Biggest builds:</strong> the portfolio website (~8h 30m) and the ACCA Seat Planner (~7h 50m).<ul class="sub"><li>The portfolio feeds evidence into every Company Interview Brief.</li><li>The Seat Planner went from prototype to v70 in 3 days.</li></ul></li>
+      <li><strong>Strongest result:</strong> a full interview-prep chain that has produced 4 briefs so far.<ul class="sub"><li>The ChatGPT research skill moved to Claude Code on 28 Sep.</li><li>Claude Code added an HTML report and publishing.</li></ul></li>
+      <li><strong>Job scanning runs in 3 places:</strong> all three show refreshed ads as new.<ul class="sub"><li>Daily Job Scanner in Claude Code: daily schedule off since 14 Oct.</li><li>ChatGPT 6am and 5pm tasks: still producing output.</li><li>Settling on one daily scan would remove repeated recommendations.</li></ul></li>
+      <li><strong>Platform split:</strong> Claude Code handles files, Gmail drafts, WhatsApp, GitHub and PC schedules.<ul class="sub"><li>ChatGPT handles the recurring job-search briefings.</li></ul></li>
+      <li><strong>Gaps:</strong> no recorded ChatGPT build effort and no measured time saved.<ul class="sub"><li>No link yet from tools to interview outcomes.</li><li>The 5pm task's schedule status is not confirmed.</li></ul></li>
     </ul>
   </section>
 
@@ -585,16 +583,16 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
     <h3>How the numbers were worked out</h3>
     <ul>
       <li><strong>Developed:</strong> the date the skill or agent file was first written, checked against Claude session logs.</li>
-      <li><strong>Build time:</strong> an estimate of hands-on time in each session.<details class="more"><summary>More</summary><ul><li>Counts active minutes from your first request to the last change.</li><li>Breaks longer than 5 minutes are capped at 5 minutes.</li></ul></details></li>
-      <li><strong>Not counted:</strong> time spent using a build after it was finished.<details class="more"><summary>More</summary><ul><li>For example, publishing reports or doing job scans.</li><li>Supporting pieces built separately, such as the speed-test collector (about 45 min, 19 to 25 Aug).</li></ul></details></li>
-      <li><strong>Shared sessions:</strong> some builds were made together, so their time is split.<details class="more"><summary>More</summary><ul><li>Interview Prep Agent, Company Interview Brief and Interview Brief Web Report: 28 and 29 Sep, about 1h 50m.</li><li>New GitHub Site and Update Live Site: about 20 min together.</li></ul></details></li>
-      <li><strong>Portfolio website:</strong> time covers the personal brand sessions, 26 Jul to 10 Sep.<details class="more"><summary>More</summary><ul><li>Includes small related pieces: a role-themes diagram and a Data Strategy &amp; Evolution link.</li><li>Treat it as within plus or minus 30%.</li></ul></details></li>
-      <li><strong>ACCA Seat Planner:</strong> time covers the Claude Code sessions, 12 to 16 Oct.<details class="more"><summary>More</summary><ul><li>Versions 1 to 17 were built earlier in a claude.ai chat; that time is not counted.</li><li>Use is not tracked: the app runs on each coach's phone with no analytics.</li></ul></details></li>
-      <li><strong>ChatGPT builds:</strong> dates, results and obstacles come from your ChatGPT inventory (18 Oct).<details class="more"><summary>More</summary><ul><li>Build dates are when the related chat was created.</li><li>Build time was not recorded.</li></ul></details></li>
-      <li><strong>Results and obstacles:</strong> counts come from output folders, run logs, trackers and GitHub, as at 18 Oct.<details class="more"><summary>More</summary><ul><li>Obstacles are problems raised in build sessions, and how each was handled.</li></ul></details></li>
+      <li><strong>Build time:</strong> an estimate of hands-on time in each session.<ul class="sub"><li>Counts active minutes from your first request to the last change.</li><li>Breaks longer than 5 minutes are capped at 5 minutes.</li></ul></li>
+      <li><strong>Not counted:</strong> time spent using a build after it was finished.<ul class="sub"><li>For example, publishing reports or doing job scans.</li><li>Supporting pieces built separately, such as the speed-test collector (about 45 min, 19 to 25 Aug).</li></ul></li>
+      <li><strong>Shared sessions:</strong> some builds were made together, so their time is split.<ul class="sub"><li>Interview Prep Agent, Company Interview Brief and Interview Brief Web Report: 28 and 29 Sep, about 1h 50m.</li><li>New GitHub Site and Update Live Site: about 20 min together.</li></ul></li>
+      <li><strong>Portfolio website:</strong> time covers the personal brand sessions, 26 Jul to 10 Sep.<ul class="sub"><li>Includes small related pieces: a role-themes diagram and a Data Strategy &amp; Evolution link.</li><li>Treat it as within plus or minus 30%.</li></ul></li>
+      <li><strong>ACCA Seat Planner:</strong> time covers the Claude Code sessions, 12 to 16 Oct.<ul class="sub"><li>Versions 1 to 17 were built earlier in a claude.ai chat; that time is not counted.</li><li>Use is not tracked: the app runs on each coach's phone with no analytics.</li></ul></li>
+      <li><strong>ChatGPT builds:</strong> dates, results and obstacles come from your ChatGPT inventory (18 Oct).<ul class="sub"><li>Build dates are when the related chat was created.</li><li>Build time was not recorded.</li></ul></li>
+      <li><strong>Results and obstacles:</strong> counts come from output folders, run logs, trackers and GitHub, as at 18 Oct.<ul class="sub"><li>Obstacles are problems raised in build sessions, and how each was handled.</li></ul></li>
       <li><strong>Status:</strong> set by Adam, as at 19 Oct 2026.</li>
-      <li><strong>Times used and run time:</strong> counted from session logs and scheduled and cloud run history, to 18 Oct.<details class="more"><summary>More</summary><ul><li>A use is one slash command or scheduled run.</li><li>Run time is Claude's working time, not time spent waiting on you.</li><li>Portfolio views come from GoatCounter.</li><li>ChatGPT counts assume one use a day and have not been checked.</li></ul></details></li>
-      <li><strong>Version updates:</strong> how many times each build changed after it was first built.<details class="more"><summary>More</summary><ul><li>Counted as separate editing sessions in the session logs.</li><li>The portfolio and seat planner use their published version history.</li><li>ChatGPT figures come from your inventory.</li></ul></details></li>
+      <li><strong>Times used and run time:</strong> counted from session logs and scheduled and cloud run history, to 18 Oct.<ul class="sub"><li>A use is one slash command or scheduled run.</li><li>Run time is Claude's working time, not time spent waiting on you.</li><li>Portfolio views come from GoatCounter.</li><li>ChatGPT counts assume one use a day and have not been checked.</li></ul></li>
+      <li><strong>Version updates:</strong> how many times each build changed after it was first built.<ul class="sub"><li>Counted as separate editing sessions in the session logs.</li><li>The portfolio and seat planner use their published version history.</li><li>ChatGPT figures come from your inventory.</li></ul></li>
       <li><strong>Precision:</strong> figures are rounded to the nearest 5 minutes. Treat them as within plus or minus 25%.</li>
     </ul>
   </div>
