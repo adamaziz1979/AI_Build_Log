@@ -36,7 +36,9 @@ h1{font-size:clamp(1.7rem,4vw,2.3rem)}
 h2{font-size:1.25rem}
 h3{font-size:1rem}
 .eyebrow{font-family:var(--font-mono);font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-header{display:grid;gap:10px}
+header{display:grid;gap:10px;position:relative;isolation:isolate}
+header>*{position:relative;z-index:1}
+header>canvas.pollen{position:absolute;z-index:0;top:-40px;left:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));width:calc(100% + 2 * max(16px, env(safe-area-inset-left, 0px)));height:calc(100% + 68px);display:block;pointer-events:none;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 70%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 70%,transparent)}
 header p{margin:0;color:var(--muted);max-width:68ch;font-size:1.02rem}
 section>p.eyebrow{font-size:.64rem;letter-spacing:.05em;line-height:1.5}
 .num{font-variant-numeric:tabular-nums}
@@ -252,6 +254,7 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 <body>
 <div class="wrap">
   <header>
+    <canvas class="pollen" aria-hidden="true"></canvas>
     <div class="eyebrow">Claude Code + ChatGPT · Custom build log · 19 Oct 2026</div>
     <h1>17 builds across Claude Code and ChatGPT</h1>
     <p>17 AI builds: 14 in Claude Code and 3 in ChatGPT, grouped into 6 categories. Each one shows when it was built, hands-on build time, how often it's used, and what it delivered and ran into, taken from session logs, run logs and output folders.</p>
@@ -801,6 +804,54 @@ document.addEventListener('click', function (e) {
     es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); e.target._play(); } });
   }, { threshold: 0.35 });
   map.forEach(function (m) { var el = document.querySelector(m[0]); if (el) { el._play = m[1]; io.observe(el); } });
+})();
+</script>
+<script>
+/* Headline background: slow "digital pollen" drifting upward. Pauses off screen and in hidden tabs; one still frame when reduced motion is on. */
+(function () {
+  var cv = document.querySelector('header canvas.pollen'); if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0, P = [], col = '79,157,255', running = false, last = 0, seen = true;
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function readCol() {
+    var c = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(), m;
+    if ((m = c.match(/^#([0-9a-f]{6})$/i))) { var n = parseInt(m[1], 16); col = (n >> 16) + ',' + ((n >> 8) & 255) + ',' + (n & 255); }
+  }
+  function seed(p, anywhere) {
+    p.x = Math.random() * W; p.y = anywhere ? Math.random() * H : H + 10;
+    p.r = 0.8 + Math.pow(Math.random(), 2.2) * 2.4;          /* mostly tiny, a few larger */
+    p.vy = -(4 + Math.random() * 9);                           /* px per second, upward */
+    p.sw = 6 + Math.random() * 16; p.sf = 0.05 + Math.random() * 0.12; p.ph = Math.random() * 6.28;
+    p.a = 0.24 + Math.random() * 0.46; p.tw = 0.3 + Math.random() * 0.9;
+    return p;
+  }
+  function size() {
+    var r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var want = Math.round(Math.min(150, Math.max(40, W * H / 5200)));
+    while (P.length < want) P.push(seed({}, true)); P.length = want;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < P.length; i++) {
+      var p = P[i], x = p.x + Math.sin(t * p.sf + p.ph) * p.sw, a = p.a * (0.65 + 0.35 * Math.sin(t * p.tw + p.ph));
+      if (p.r > 1.3) { ctx.beginPath(); ctx.arc(x, p.y, p.r * 3.2, 0, 6.283); ctx.fillStyle = 'rgba(' + col + ',' + (a * 0.18).toFixed(3) + ')'; ctx.fill(); }
+      ctx.beginPath(); ctx.arc(x, p.y, p.r, 0, 6.283); ctx.fillStyle = 'rgba(' + col + ',' + a.toFixed(3) + ')'; ctx.fill();
+    }
+  }
+  function frame(now) {
+    if (!running) return;
+    var dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+    for (var i = 0; i < P.length; i++) { var p = P[i]; p.y += p.vy * dt; if (p.y < -12) seed(p, false); }
+    draw(now / 1000); requestAnimationFrame(frame);
+  }
+  function start() { if (running || still || !seen || document.hidden) return; running = true; last = performance.now(); requestAnimationFrame(frame); }
+  function stop() { running = false; }
+  readCol(); size(); draw(0); start();
+  if (window.ResizeObserver) new ResizeObserver(function () { size(); if (!running) draw(0); }).observe(cv);
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { seen = e[0].isIntersecting; seen ? start() : stop(); }).observe(cv);
+  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+  var mq = window.matchMedia && matchMedia('(prefers-color-scheme: dark)'); if (mq && mq.addEventListener) mq.addEventListener('change', function () { readCol(); if (!running) draw(0); });
+  new MutationObserver(function () { readCol(); if (!running) draw(0); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 })();
 </script>
 </body>
