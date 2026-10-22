@@ -240,6 +240,12 @@ td.st .saved{display:block;min-height:1em;margin-top:4px;font-family:var(--font-
 .notes-row .notes ul{display:block;columns:2;column-gap:40px}
 .notes-row .notes li{break-inside:avoid;margin-bottom:6px}
 @media (max-width:860px){.notes-row .notes ul{columns:1}}
+details.notes>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;border-radius:6px}
+details.notes>summary::-webkit-details-marker{display:none}
+details.notes>summary h3{display:flex;align-items:center;gap:8px;margin:0}
+details.notes>summary:hover h3{color:var(--accent)}
+details.notes>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+details.notes:not([open]){padding-top:8px;padding-bottom:8px}
 footer{color:var(--muted);font-size:.8rem}
 
 /* UX review 19-Oct-26: tap areas (1, 2), touch header height (3), captions (10), solid bubbles */
@@ -616,8 +622,8 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 
 
   <div class="notes-row">
-  <section class="notes assess">
-    <h3>Overall assessment</h3>
+  <details class="notes assess">
+    <summary><h3><span class="chev" aria-hidden="true"></span>Overall assessment</h3></summary>
     <ul>
       <li><strong>Biggest builds:</strong> the portfolio website (~11h 15m), the ACCA Seat Planner (~8h 30m) and the KPI Creator (~7h 50m).<ul class="sub"><li>The portfolio feeds evidence into every Company Interview Brief.</li><li>The Seat Planner went from prototype to v70 in 3 days.</li><li>The KPI Creator ran its first test case through 4 of 5 stages in 3 days.</li></ul></li>
       <li><strong>Strongest result:</strong> a full interview-prep chain that has produced 4 briefs so far.<ul class="sub"><li>The ChatGPT research skill moved to Claude Code on 28 Sep.</li><li>Claude Code added an HTML report and publishing.</li></ul></li>
@@ -625,10 +631,10 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
       <li><strong>Platform split:</strong> Claude Code handles files, Gmail drafts, WhatsApp, GitHub and PC schedules.<ul class="sub"><li>ChatGPT handles the recurring job-search briefings.</li></ul></li>
       <li><strong>Gaps:</strong> no recorded ChatGPT build effort and no measured time saved.<ul class="sub"><li>No link yet from tools to interview outcomes.</li><li>The 5pm task's schedule status is not confirmed.</li></ul></li>
     </ul>
-  </section>
+  </details>
 
-  <div class="notes">
-    <h3>How the numbers were worked out</h3>
+  <details class="notes">
+    <summary><h3><span class="chev" aria-hidden="true"></span>How the numbers were worked out</h3></summary>
     <ul>
       <li><strong>Developed:</strong> the date the skill or agent file was first written, checked against Claude session logs.</li>
       <li><strong>Build time:</strong> an estimate of hands-on time in each session.<ul class="sub"><li>Counts active minutes from your first request to the last change.</li><li>Breaks longer than 5 minutes are capped at 5 minutes.</li></ul></li>
@@ -645,7 +651,7 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
       <li><strong>Version updates:</strong> how many times each build changed after it was first built.<ul class="sub"><li>Counted as separate editing sessions in the session logs.</li><li>The portfolio and seat planner use their published version history.</li><li>ChatGPT figures come from your inventory.</li></ul></li>
       <li><strong>Precision:</strong> figures are rounded to the nearest 5 minutes. Treat them as within plus or minus 25%.</li>
     </ul>
-  </div>
+  </details>
   </div>
 
   </main>
