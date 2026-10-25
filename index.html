@@ -307,16 +307,15 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 }
 
 /* Top 3 Highlights carousel: one slide per view on phones, a peek of the next slide on wider screens */
-.hl{display:grid;gap:12px;min-width:0}
+.hl{display:grid;gap:12px;min-width:0;width:100%;max-width:760px;margin-inline:auto;justify-self:center}
 .hl-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hl-nav{display:flex;gap:8px}
 .hl-btn{width:44px;height:44px;display:grid;place-items:center;font:500 1.4rem/1 var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:50%;cursor:pointer}
 .hl-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .hl-btn:disabled{opacity:.4;cursor:default}
 .hl-btn:focus-visible,.hl-dots button:focus-visible,.hl-track:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.hl-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;padding:2px;min-width:0;border-radius:10px}
-.hl-track::-webkit-scrollbar{display:none}
-.hl-card{flex:0 0 min(100%,620px);scroll-snap-align:start;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;overflow:hidden;min-width:0}
+.hl-track{display:grid;min-width:0;border-radius:10px;touch-action:pan-y}
+.hl-card{grid-area:1/1;transition:opacity .35s ease,visibility .35s;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;overflow:hidden;min-width:0}
 .hl-fig{margin:0;background:var(--bg);border-right:1px solid var(--line);display:grid;align-content:start}
 .hl-fig img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top left}
 .hl-fig figcaption{padding:6px 10px;font-size:.7rem;color:var(--muted);border-top:1px solid var(--line)}
@@ -335,8 +334,9 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 .hl-dots button{width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
 .hl-dots button::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--line);transition:background .2s,width .2s}
 .hl-dots button[aria-current="true"]::before{background:var(--accent);width:22px;border-radius:5px}
+.hl-card:not(.on){visibility:hidden;opacity:0}
 @media (max-width:640px){.hl-card{grid-template-columns:minmax(0,1fr)}.hl-fig{border-right:0;border-bottom:1px solid var(--line)}}
-@media (prefers-reduced-motion:reduce){.hl-track{scroll-behavior:auto}.hl-dots button::before{transition:none}}
+@media (prefers-reduced-motion:reduce){.hl-card,.hl-dots button::before{transition:none}}
 </style>
 </head>
 <body>
@@ -1126,42 +1126,39 @@ document.addEventListener('click', function (e) {
 </script>
 
 <script>
-/* Top 3 Highlights: arrows and dots move one slide at a time; See Details opens that build in All builds */
+/* Top 3 Highlights: one card shows at a time; arrows (looping), dots, arrow keys and swipe change it. See Details opens
+   that build in All builds */
 (function () {
   var track = document.querySelector('.hl-track'); if (!track) return;
   var cards = Array.prototype.slice.call(track.querySelectorAll('.hl-card'));
   var dots = Array.prototype.slice.call(document.querySelectorAll('.hl-dots button'));
   var prev = document.querySelector('.hl-btn[data-d="-1"]'), next = document.querySelector('.hl-btn[data-d="1"]');
-  var target = -1;   /* slide being scrolled to, so the dots and arrows update straight away */
-  function pos(i) { return Math.max(0, cards[i].getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft - 2); }
-  function atEnd() { return track.scrollLeft + track.clientWidth >= track.scrollWidth - 4; }
-  function current() {
-    if (target >= 0) return target;
-    var x = track.scrollLeft, best = 0;
-    cards.forEach(function (c, i) { if (Math.abs(pos(i) - x) < Math.abs(pos(best) - x)) best = i; });
-    if (atEnd() && x > 4) best = cards.length - 1;
-    return best;
-  }
-  function paint(i) {
-    dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
-    prev.disabled = i === 0; next.disabled = i === cards.length - 1 || (target < 0 && atEnd());
-  }
+  var cur = 0;
+  function current() { return cur; }
   function go(i) {
-    i = Math.max(0, Math.min(cards.length - 1, i));
-    target = i; paint(i);
-    track.scrollTo({ left: Math.min(pos(i), track.scrollWidth - track.clientWidth), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    clearTimeout(go.t); go.t = setTimeout(function () { target = -1; }, 700);
+    cur = (i + cards.length) % cards.length;
+    cards.forEach(function (c, k) {
+      var on = k === cur;
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-hidden', on ? 'false' : 'true');
+      if (on) c.removeAttribute('inert'); else c.setAttribute('inert', '');
+    });
+    dots.forEach(function (d, k) { d.setAttribute('aria-current', k === cur ? 'true' : 'false'); });
   }
-  function sync() { if (target < 0) paint(current()); }
-  prev.addEventListener('click', function () { go(current() - 1); });
-  next.addEventListener('click', function () { go(current() + 1); });
+  prev.addEventListener('click', function () { go(cur - 1); });
+  next.addEventListener('click', function () { go(cur + 1); });
   dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
   track.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(current() + (e.key === 'ArrowRight' ? 1 : -1)); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(cur + (e.key === 'ArrowRight' ? 1 : -1)); }
   });
-  var t; track.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(sync, 60); }, { passive: true });
-  window.addEventListener('resize', sync);
-  sync();
+  var x0 = null, y0 = 0;
+  track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  track.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+  go(0);
   /* Auto-rotate every 6 seconds and loop back to the first slide. Pauses while hovered, focused, off-screen or in a
      hidden tab; the pause button stops it for good; never starts when reduced motion is on. */
   var play = document.querySelector('.hl-play'), sec = track.closest('.hl'), stopped = false, hover = false, seen = true, timer = null;
@@ -1175,7 +1172,7 @@ document.addEventListener('click', function (e) {
   function tick() {
     clearInterval(timer); timer = null;
     if (stopped || hover || !seen || document.hidden || sec.contains(document.activeElement) && document.activeElement !== play) return;
-    timer = setInterval(function () { var i = current(); go(i >= cards.length - 1 ? 0 : i + 1); }, 6000);
+    timer = setInterval(function () { go(cur + 1); }, 6000);
   }
   play.addEventListener('click', function () { setPlay(stopped); });
   sec.addEventListener('mouseenter', function () { hover = true; tick(); });
