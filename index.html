@@ -360,15 +360,15 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
     <div class="stat"><b class="num">25</b><span>Builds: 23 Claude Code, 2 ChatGPT</span></div>
     <div class="stat"><b class="num">~44h 50m</b><span>Claude Code build time (ChatGPT not recorded)</span></div>
     <div class="stat"><b class="num">~1h 57m</b><span>Average per Claude Code build</span></div>
-    <div class="stat"><b class="num" id="stat-sf">17 vs 2</b><span id="stat-sf-note">Success vs failures: running vs issues being addressed (3 in development, 3 not set)</span></div>
+    <div class="stat"><b class="num" id="stat-sf">20 vs 2</b><span id="stat-sf-note">Success vs failures: running vs issues being addressed (3 in development)</span></div>
     <div class="stat"><b class="num">79 · ~8h 55m</b><span>Claude Code uses and total run time</span></div>  </div>
 
   <div class="tally" id="tally">
     <h2>Status</h2>
-    <span class="t" style="--c:var(--s-run)">Completed &amp; running <b>17</b></span>
+    <span class="t" style="--c:var(--s-run)">Completed &amp; running <b>20</b></span>
     <span class="t" style="--c:var(--s-dev)">In development <b>3</b></span>
     <span class="t" style="--c:var(--s-issue)">Issues being addressed <b>2</b></span>
-    <span class="t" style="--c:var(--line)">Not set <b>3</b></span>
+    <span class="t" style="--c:var(--line)">Not set <b>0</b></span>
     <p>Status as at 27 Oct 2026, set by Adam.</p>
   </div>
 
@@ -695,21 +695,21 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
           <div class="md-tools"><h4>Skills and tools</h4><div><span class="tool">GitHub</span><span class="tool">Claude Code hooks</span></div></div>
         </article>
         <article class="md-panel" id="b24" style="--c:var(--c-data)" aria-labelledby="i-b24" hidden>
-          <div class="md-head"><div class="md-title">Agent Simulation<small>Skill · /create-kpi-simulation</small></div><div class="md-status"><span class="sb" data-v="">Not set</span></div></div>
+          <div class="md-head"><div class="md-title">Agent Simulation<small>Skill · /create-kpi-simulation</small></div><div class="md-status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></div></div>
           <div class="md-plat"><span class="tag cc">Claude Code</span></div>
           <div class="md-facts"><dl class="facts-l"><div><dt>Developed</dt><dd>23 Oct 2026<small>Part of KPI Creator</small></dd></div><div><dt>Build time</dt><dd><b>~1h 30m</b><small>Estimate, 3 sessions, 23 to 27 Oct</small></dd></div><div><dt>Times used</dt><dd><b>1</b><small>27 Oct</small></dd></div><div><dt>Total run time</dt><dd><b>~3m</b></dd></div><div><dt>Version updates</dt><dd><b>2</b><small>26 and 27 Oct</small></dd></div></dl></div>
           <div class="md-body"><div><h4>What it does</h4><ul><li>Replays a KPI Creator run as an animation, with the five agents in a circle</li><li>Shows each output as it was made, with handovers at each approval</li><li>Timed from measured agent run time</li><li>Saves to the project's deliverables folder and never publishes</li></ul></div><div class="ro"><div class="ro-g ok"><span>Results</span><ul><li>Agent Simulation built for a KPI Creator test run on 27 Oct</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Agent run time is not logged directly, so it is measured from save and commit times</li></ul></div></div></div>
           <div class="md-tools"><h4>Skills and tools</h4><div><span class="tool">Claude Code skill</span><span class="tool">Python</span><span class="tool">HTML, CSS, JS</span></div></div>
         </article>
         <article class="md-panel" id="b25" style="--c:var(--c-data)" aria-labelledby="i-b25" hidden>
-          <div class="md-head"><div class="md-title">KPI Token Report<small>Skill · /kpi-token-report</small></div><div class="md-status"><span class="sb" data-v="">Not set</span></div></div>
+          <div class="md-head"><div class="md-title">KPI Token Report<small>Skill · /kpi-token-report</small></div><div class="md-status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></div></div>
           <div class="md-plat"><span class="tag cc">Claude Code</span></div>
           <div class="md-facts"><dl class="facts-l"><div><dt>Developed</dt><dd>24 Oct 2026<small>Part of KPI Creator</small></dd></div><div><dt>Build time</dt><dd><b>~45m</b><small>Estimate, 24 to 26 Oct</small></dd></div><div><dt>Times used</dt><dd><b>0</b><small>By command; token pages made in KPI sessions</small></dd></div><div><dt>Total run time</dt><dd><span class="unrec">None yet</span></dd></div><div><dt>Version updates</dt><dd><b>0</b><small>Unchanged since 26 Oct</small></dd></div></dl></div>
           <div class="md-body"><div><h4>What it does</h4><ul><li>Measures token use for a KPI Creator run, split by agent</li><li>Compares any or all runs side by side</li><li>Builds a comparison page in the KPI Creator token reports folder</li><li>Never publishes</li></ul></div><div class="ro"><div class="ro-g ok"><span>Results</span><ul><li>Token comparison page live: ClearCompare, Kestrel Medical and Lumenwire Audio (10 updates, 24 to 27 Oct)</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>Estimates had to be replaced with actuals once each run finished</li></ul></div></div></div>
           <div class="md-tools"><h4>Skills and tools</h4><div><span class="tool">Claude Code skill</span><span class="tool">Python</span><span class="tool">Token reports</span></div></div>
         </article>
         <article class="md-panel" id="b26" style="--c:var(--c-data)" aria-labelledby="i-b26" hidden>
-          <div class="md-head"><div class="md-title">KPI End-to-End Updater<small>Skill · /update-kpi-end-to-end</small></div><div class="md-status"><span class="sb" data-v="">Not set</span></div></div>
+          <div class="md-head"><div class="md-title">KPI End-to-End Updater<small>Skill · /update-kpi-end-to-end</small></div><div class="md-status"><span class="sb" data-v="running">Successfully Completed &amp; Running</span></div></div>
           <div class="md-plat"><span class="tag cc">Claude Code</span></div>
           <div class="md-facts"><dl class="facts-l"><div><dt>Developed</dt><dd>27 Oct 2026<small>Part of KPI Creator</small></dd></div><div><dt>Build time</dt><dd><b>~30m</b><small>Estimate, 1 session</small></dd></div><div><dt>Times used</dt><dd><b>0</b></dd></div><div><dt>Total run time</dt><dd><span class="unrec">None yet</span></dd></div><div><dt>Version updates</dt><dd><b>0</b><small>Built 27 Oct</small></dd></div></dl></div>
           <div class="md-body"><div><h4>What it does</h4><ul><li>Adds a finished KPI Creator test case to the public end-to-end page</li><li>Publishes the case's outputs alongside the earlier runs</li><li>Keeps the sealed test bank off the public page</li><li>Pushes to GitHub Pages only when you approve</li></ul></div><div class="ro"><div class="ro-g ok"><span>Results</span><ul><li>Not used yet; built after the Lumenwire Audio run closed</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>None recorded yet</li></ul></div></div></div>
