@@ -320,8 +320,8 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 .hl-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .hl-btn:disabled{opacity:.4;cursor:default}
 .hl-btn:focus-visible,.hl-dots button:focus-visible,.hl-track:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.hl-track{display:grid;min-width:0;border-radius:10px;touch-action:pan-y}
-.hl-card{grid-area:1/1;transition:opacity .35s ease,visibility .35s;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;overflow:hidden;min-width:0}
+.hl-track{display:grid;min-width:0;border-radius:10px;touch-action:pan-y;overflow:hidden}
+.hl-card{grid-area:1/1;transition:transform .5s ease,visibility .5s;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:10px;overflow:hidden;min-width:0}
 .hl-fig{margin:0;background:var(--bg);border-right:1px solid var(--line);display:grid;align-content:start}
 .hl-fig img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top left}
 .hl-fig figcaption{padding:6px 10px;font-size:.7rem;color:var(--muted);border-top:1px solid var(--line)}
@@ -340,7 +340,7 @@ section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:
 .hl-dots button{width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
 .hl-dots button::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--line);transition:background .2s,width .2s}
 .hl-dots button[aria-current="true"]::before{background:var(--accent);width:22px;border-radius:5px}
-.hl-card:not(.on){visibility:hidden;opacity:0}
+.hl-card:not(.on){visibility:hidden;transform:translateX(100%)}
 @media (max-width:640px){.hl-card{grid-template-columns:minmax(0,1fr)}.hl-fig{border-right:0;border-bottom:1px solid var(--line)}}
 @media (prefers-reduced-motion:reduce){.hl-card,.hl-dots button::before{transition:none}}
 </style>
@@ -1169,31 +1169,43 @@ document.addEventListener('click', function (e) {
   var prev = document.querySelector('.hl-btn[data-d="-1"]'), next = document.querySelector('.hl-btn[data-d="1"]');
   var cur = 0;
   function current() { return cur; }
-  function go(i) {
-    cur = (i + cards.length) % cards.length;
+  /* dir 1 slides left (new card from the right), -1 slides right; the new card is parked on its entry side first */
+  function go(i, dir) {
+    i = (i + cards.length) % cards.length;
+    if (dir === undefined) dir = i >= cur ? 1 : -1;
+    var old = cards[cur], nw = cards[i];
+    if (nw !== old) {
+      nw.style.transition = 'none';
+      nw.style.transform = 'translateX(' + (dir > 0 ? 100 : -100) + '%)';
+      void nw.offsetWidth;
+      nw.style.transition = ''; nw.style.transform = '';
+      old.style.transform = 'translateX(' + (dir > 0 ? -100 : 100) + '%)';
+    }
+    cur = i;
     cards.forEach(function (c, k) {
       var on = k === cur;
+      if (on) c.style.transform = '';
       c.classList.toggle('on', on);
       c.setAttribute('aria-hidden', on ? 'false' : 'true');
       if (on) c.removeAttribute('inert'); else c.setAttribute('inert', '');
     });
     dots.forEach(function (d, k) { d.setAttribute('aria-current', k === cur ? 'true' : 'false'); });
   }
-  prev.addEventListener('click', function () { go(cur - 1); });
-  next.addEventListener('click', function () { go(cur + 1); });
+  prev.addEventListener('click', function () { go(cur - 1, -1); });
+  next.addEventListener('click', function () { go(cur + 1, 1); });
   dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
   track.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(cur + (e.key === 'ArrowRight' ? 1 : -1)); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); var d = e.key === 'ArrowRight' ? 1 : -1; go(cur + d, d); }
   });
   var x0 = null, y0 = 0;
   track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
   track.addEventListener('touchend', function (e) {
     if (x0 === null) return;
     var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { var d = dx < 0 ? 1 : -1; go(cur + d, d); }
   }, { passive: true });
   go(0);
-  /* Auto-rotate every 6 seconds and loop back to the first slide. Pauses while hovered, focused, off-screen or in a
+  /* Auto-rotate every 4 seconds and loop back to the first slide. Pauses while hovered, focused, off-screen or in a
      hidden tab; the pause button stops it for good; never starts when reduced motion is on. */
   var play = document.querySelector('.hl-play'), sec = track.closest('.hl'), stopped = false, hover = false, seen = true, timer = null;
   var still = matchMedia('(prefers-reduced-motion: reduce)');
@@ -1206,7 +1218,7 @@ document.addEventListener('click', function (e) {
   function tick() {
     clearInterval(timer); timer = null;
     if (stopped || hover || !seen || document.hidden || sec.contains(document.activeElement) && document.activeElement !== play) return;
-    timer = setInterval(function () { go(cur + 1); }, 6000);
+    timer = setInterval(function () { go(cur + 1, 1); }, 4000);
   }
   play.addEventListener('click', function () { setPlay(stopped); });
   sec.addEventListener('mouseenter', function () { hover = true; tick(); });
