@@ -950,7 +950,7 @@ document.addEventListener('click', function (e) {
     list.forEach(function (c) { var p = spot(placed, Math.max(c.r, 1)); placed.push({ x: p.x, y: p.y, r: Math.max(c.r, 1) }); out.push(p); });
     return out;
   }
-  function draw(c) { c.g.setAttribute('transform', 'translate(' + c.x.toFixed(1) + ' ' + c.y.toFixed(1) + ')'); c.c.setAttribute('r', Math.max(0, c.r - 0.4).toFixed(1)); }
+  function draw(c) { var px = c.sx != null ? c.sx : c.x, py = c.sy != null ? c.sy : c.y; c.g.setAttribute('transform', 'translate(' + px.toFixed(1) + ' ' + py.toFixed(1) + ')'); c.c.setAttribute('r', Math.max(0, c.r - 0.4).toFixed(1)); }
   /* the timeline's growth, run once silently: it becomes the resting layout */
   var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
   function grow(xsteps, msStep) {
@@ -977,18 +977,20 @@ document.addEventListener('click', function (e) {
   pack(order).forEach(function (p, k) { order[k].x = p.x; order[k].y = p.y; });
   /* Keep every bubble inside the frame: the whole cluster sits in one group that shifts, and shrinks if it must,
      so the outermost bubbles always stay in view while the cluster grows and re-packs */
-  var first = cells[0] && cells[0].g, wrap = first ? document.createElementNS(svg.namespaceURI, 'g') : null, fs = 1;
+  var first = cells[0] && cells[0].g, wrap = first ? document.createElementNS(svg.namespaceURI, 'g') : null, fs = 1, fx = 0, fy = 0;
   if (wrap) { wrap.setAttribute('class', 'tb-fit'); first.parentNode.insertBefore(wrap, first); cells.forEach(function (c) { wrap.appendChild(c.g); }); }
   function fit(snap) {
     if (!wrap) return;
     var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, P = 3;
-    cells.forEach(function (c) { if (c.on === false || !(c.r > 0)) return; x0 = Math.min(x0, c.x - c.r); x1 = Math.max(x1, c.x + c.r); y0 = Math.min(y0, c.y - c.r); y1 = Math.max(y1, c.y + c.r); });
+    cells.forEach(function (c) { if (c.on === false || !(c.r > 0)) return; var px = c.sx != null ? c.sx : c.x, py = c.sy != null ? c.sy : c.y; x0 = Math.min(x0, px - c.r); x1 = Math.max(x1, px + c.r); y0 = Math.min(y0, py - c.r); y1 = Math.max(y1, py + c.r); });
     if (x0 === Infinity) { wrap.removeAttribute('transform'); return; }
     var want = Math.min(1, (X1 - X0 - 2 * P) / (x1 - x0), (Y1 - Y0 - 2 * P) / (y1 - y0));
-    fs = snap ? want : (want < fs ? want : fs + (want - fs) * 0.15);   /* shrink at once, ease back up */
+    /* ease the zoom and shift (shrinking a little faster than growing back) so the frame never snaps */
+    fs = snap ? want : fs + (want - fs) * (want < fs ? 0.3 : 0.05);
     var ax = CX + (x0 - CX) * fs, bx = CX + (x1 - CX) * fs, ay = CY + (y0 - CY) * fs, by = CY + (y1 - CY) * fs;
     var dx = ax < X0 + P ? X0 + P - ax : (bx > X1 - P ? X1 - P - bx : 0), dy = ay < Y0 + P ? Y0 + P - ay : (by > Y1 - P ? Y1 - P - by : 0);
-    wrap.setAttribute('transform', 'translate(' + (dx + CX * (1 - fs)).toFixed(1) + ' ' + (dy + CY * (1 - fs)).toFixed(1) + ') scale(' + fs.toFixed(3) + ')');
+    fx = snap ? dx : fx + (dx - fx) * 0.18; fy = snap ? dy : fy + (dy - fy) * 0.18;
+    wrap.setAttribute('transform', 'translate(' + (fx + CX * (1 - fs)).toFixed(2) + ' ' + (fy + CY * (1 - fs)).toFixed(2) + ') scale(' + fs.toFixed(4) + ')');
   }
   cells.forEach(function (c) { c.hx = c.x; c.hy = c.y; c.hr = c.r; draw(c); });
   fit(true);
@@ -1110,7 +1112,7 @@ document.addEventListener('click', function (e) {
       var ran = false; /* resting layout is the same greedy pack the glide was heading to */
       tbs.forEach(function (b) { b.r = b.hr; if (!ran) { b.x = b.hx; b.y = b.hy; } b.on = true; b.g.style.opacity = 1; if (b.lab) b.lab.style.opacity = 1; });
       if (ran) BB.relax(tbs, 2, 0);
-      tbs.forEach(BB.draw); BB.fit(true); return;
+      tbs.forEach(function (b) { b.sx = b.sy = null; }); tbs.forEach(BB.draw); BB.fit(true); return;
     }
     var live = [];
     tbs.forEach(function (b) {
@@ -1121,7 +1123,7 @@ document.addEventListener('click', function (e) {
         if (reached[k] == null) return;
         c += ease(Math.min(1, (ms - reached[k]) / 800)); n++;
       });
-      if (n === 0) { b.on = false; b.g.style.opacity = 0; return; }
+      if (n === 0) { b.on = false; b.sx = b.sy = null; b.g.style.opacity = 0; return; }
       b.r = BB.rOf(c); if (b.lab) { b.lab.style.opacity = c > 0.6 ? 1 : 0; var nn = b.g.querySelector('text .n'); if (nn) nn.textContent = n; }
       live.push(b);
     });
@@ -1134,6 +1136,11 @@ document.addEventListener('click', function (e) {
       b.g.style.opacity = 1;
     });
     if (x < 619.5) { BB.relax(live, 3, 0.02); BB.relax(live, 10, 0); }   /* in the final pause, glide freely into the resting layout */
+    /* drawn positions follow the packed positions gently, so re-packing glides instead of twitching */
+    live.forEach(function (b) {
+      if (b.sx == null) { b.sx = b.x; b.sy = b.y; }
+      else { b.sx += (b.x - b.sx) * 0.14; b.sy += (b.y - b.sy) * 0.14; }
+    });
     live.forEach(BB.draw); BB.fit();
   }
   function playTimeline(hold) {
