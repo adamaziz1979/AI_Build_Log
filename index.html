@@ -260,7 +260,7 @@ footer{color:var(--muted);font-size:.8rem}
 a.jump{display:inline-block;padding-block:12.5px;margin-block:-12.5px}
 td a,dd a,.mcol a,.ro a{display:inline-block;padding-block:14px;margin-block:-14px}
 ul.sub{margin:4px 0 0;padding-left:16px;display:grid;gap:3px;color:var(--muted)}
-@media (pointer:coarse){summary.bar,summary.cat-head{min-height:44px}summary.bar,summary.cat-head{align-items:center}}
+@media (pointer:coarse){summary.bar,summary.cat-head{min-height:44px}summary.bar,summary.cat-head{align-items:center}select.status{font-size:16px}}
 section>p.eyebrow,p.eyebrow{font-size:11.5px;text-transform:none;letter-spacing:0;line-height:1.5;color:var(--muted)}
 .tb-svg .tb circle{fill:var(--c);fill-opacity:1;stroke:none;transition:filter .15s}
 .tb-svg .tb:hover circle,.tb-svg .tb:focus circle,.tb-svg .tb.sel circle{fill-opacity:1;filter:brightness(1.18)}
@@ -368,7 +368,6 @@ details.runs>summary:focus-visible{outline:2px solid var(--accent);outline-offse
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header>
     <canvas class="pollen" aria-hidden="true"></canvas>
@@ -382,7 +381,7 @@ details.runs>summary:focus-visible{outline:2px solid var(--accent);outline-offse
     <div class="stat"><b class="num">33</b><span>Builds: 31 Claude Code, 2 ChatGPT</span></div>
     <div class="stat"><b class="num">~56h 50m</b><span>Claude Code build time (ChatGPT not recorded)</span></div>
     <div class="stat"><b class="num">~1h 50m</b><span>Average per Claude Code build</span></div>
-    <div class="stat"><b class="num" id="stat-sf">23 vs 2</b><span id="stat-sf-note">Success vs failures: running vs issues being addressed (6 in development)</span></div>
+    <div class="stat"><b class="num" id="stat-sf">23 vs 2</b><span id="stat-sf-note">Success vs failures: running vs issues being addressed (6 in development, 2 not set)</span></div>
     <div class="stat"><b class="num">9</b><span>Agents/Subagents created</span></div>  </div>
 
   <div class="tally" id="tally">
@@ -814,14 +813,14 @@ details.runs>summary:focus-visible{outline:2px solid var(--accent);outline-offse
           <div class="md-tools"><h4>Skills and tools</h4><div><span class="tool">Claude Code agent</span><span class="tool">Master Resume</span><span class="tool">Word files</span><span class="tool">Web search</span></div></div>
         </article>
         <article class="md-panel" id="b33" style="--c:var(--c-brand)" aria-labelledby="i-b33" hidden>
-          <div class="md-head"><div class="md-title"><a href="https://adamaziz1979.github.io/my_ai_agents/" target="_blank" rel="noopener">My AI Agents</a><small>Web page · agent profiles</small></div><div class="md-status"><span class="sb">Not set</span></div></div>
+          <div class="md-head"><div class="md-title"><a href="https://adamaziz1979.github.io/my_ai_agents/" target="_blank" rel="noopener">My AI Agents</a><small>Web page · agent profiles</small></div><div class="md-status"><span class="sb" data-v="">Not set</span></div></div>
           <div class="md-plat"><span class="tag cc">Claude Code</span></div>
           <div class="md-facts"><dl class="facts-l"><div><dt>Developed</dt><dd>2 Nov 2026<small>Live 2 Nov</small></dd></div><div><dt>Build time</dt><dd><b>~45m</b><small>Estimate, 1 session, 2 Nov</small></dd></div><div><dt>Times used</dt><dd><span class="unrec">Not tracked</span><small>No visit counter yet</small></dd></div><div><dt>Total run time</dt><dd><span class="unrec">Always on</span><small>Web page, no run time</small></dd></div><div><dt>Version updates</dt><dd><b>8</b><small>Commits after the first, 2 to 7 Nov</small></dd></div></dl></div>
           <div class="md-body"><div><h4>What it does</h4><ul><li>Profiles the 9 AI agents built here, one card each</li><li>Shows what each agent does and how it runs</li><li>Lists each agent's skills, tools and model</li><li>Built from one template and a build script</li></ul></div><div class="ro"><div class="ro-g ok"><span>Results</span><ul><li>Live at adamaziz1979.github.io/my_ai_agents</li><li>Netty added 7 Nov, taking it to 9 agents</li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>None recorded yet</li></ul></div></div></div>
           <div class="md-tools"><h4>Skills and tools</h4><div><span class="tool">Python</span><span class="tool">HTML, CSS, JS</span><span class="tool">GitHub Pages</span></div></div>
         </article>
         <article class="md-panel" id="b34" style="--c:var(--c-career)" aria-labelledby="i-b34" hidden>
-          <div class="md-head"><div class="md-title">Netty, Network Outreach<small>Agent · /netty</small></div><div class="md-status"><span class="sb">Not set</span></div></div>
+          <div class="md-head"><div class="md-title">Netty, Network Outreach<small>Agent · /netty</small></div><div class="md-status"><span class="sb" data-v="">Not set</span></div></div>
           <div class="md-plat"><span class="tag cc">Claude Code</span></div>
           <div class="md-facts"><dl class="facts-l"><div><dt>Developed</dt><dd>3 Nov 2026<small>Agent file updated 7 Nov</small></dd></div><div><dt>Build time</dt><dd><b>~1h 50m</b><small>Estimate, 2 sessions, 3 to 4 Nov</small></dd></div><div><dt>Times used</dt><dd><b>1</b><small>3 Nov</small></dd></div><div><dt>Total run time</dt><dd><span class="unrec">Not recorded</span></dd></div><div><dt>Version updates</dt><dd><b>4</b><small>4 to 7 Nov</small></dd></div></dl></div>
           <div class="md-body"><div><h4>What it does</h4><ul><li>Scores LinkedIn and phone contacts Hot, Warm or Cold</li><li>Picks the weekly batch and drafts advice-first messages</li><li>Tracks follow-ups and reports the Friday funnel numbers</li><li>Never sends, connects or posts</li></ul></div><div class="ro"><div class="ro-g ok"><span>Results</span><ul><li>Network Outreach Playbook written, 3 Nov</li><li>Network Pipeline page built to track contacts <span class="priv">(private)</span></li></ul></div><div class="ro-g ob"><span>Obstacles</span><ul><li>None recorded yet</li></ul></div></div></div>
@@ -872,6 +871,8 @@ details.runs>summary:focus-visible{outline:2px solid var(--accent);outline-offse
   </main>
 <footer>Source: <span class="mono">my-skills/</span>, <span class="mono">.claude/agents/</span>, workflow run logs, the Career folder, GitHub, Claude Code session logs and your ChatGPT inventory, read 7 Nov 2026.</footer>
 </div>
+
+
 <script>
 document.addEventListener('click', function (e) {
   var a = e.target.closest && e.target.closest('a.jump');
@@ -974,8 +975,24 @@ document.addEventListener('click', function (e) {
   cells.forEach(function (c) { c.r = rOf(c.N); });
   var order = cells.slice().sort(function (a, b) { return b.N - a.N || a.i - b.i; });
   pack(order).forEach(function (p, k) { order[k].x = p.x; order[k].y = p.y; });
+  /* Keep every bubble inside the frame: the whole cluster sits in one group that shifts, and shrinks if it must,
+     so the outermost bubbles always stay in view while the cluster grows and re-packs */
+  var first = cells[0] && cells[0].g, wrap = first ? document.createElementNS(svg.namespaceURI, 'g') : null, fs = 1;
+  if (wrap) { wrap.setAttribute('class', 'tb-fit'); first.parentNode.insertBefore(wrap, first); cells.forEach(function (c) { wrap.appendChild(c.g); }); }
+  function fit(snap) {
+    if (!wrap) return;
+    var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, P = 3;
+    cells.forEach(function (c) { if (c.on === false || !(c.r > 0)) return; x0 = Math.min(x0, c.x - c.r); x1 = Math.max(x1, c.x + c.r); y0 = Math.min(y0, c.y - c.r); y1 = Math.max(y1, c.y + c.r); });
+    if (x0 === Infinity) { wrap.removeAttribute('transform'); return; }
+    var want = Math.min(1, (X1 - X0 - 2 * P) / (x1 - x0), (Y1 - Y0 - 2 * P) / (y1 - y0));
+    fs = snap ? want : (want < fs ? want : fs + (want - fs) * 0.15);   /* shrink at once, ease back up */
+    var ax = CX + (x0 - CX) * fs, bx = CX + (x1 - CX) * fs, ay = CY + (y0 - CY) * fs, by = CY + (y1 - CY) * fs;
+    var dx = ax < X0 + P ? X0 + P - ax : (bx > X1 - P ? X1 - P - bx : 0), dy = ay < Y0 + P ? Y0 + P - ay : (by > Y1 - P ? Y1 - P - by : 0);
+    wrap.setAttribute('transform', 'translate(' + (dx + CX * (1 - fs)).toFixed(1) + ' ' + (dy + CY * (1 - fs)).toFixed(1) + ') scale(' + fs.toFixed(3) + ')');
+  }
   cells.forEach(function (c) { c.hx = c.x; c.hy = c.y; c.hr = c.r; draw(c); });
-  window.__bub = { cells: cells, rOf: rOf, relax: relax, spot: spot, pack: pack, draw: draw };
+  fit(true);
+  window.__bub = { cells: cells, rOf: rOf, relax: relax, spot: spot, pack: pack, draw: draw, fit: fit };
 })();
 </script>
 <script>
@@ -1093,7 +1110,7 @@ document.addEventListener('click', function (e) {
       var ran = false; /* resting layout is the same greedy pack the glide was heading to */
       tbs.forEach(function (b) { b.r = b.hr; if (!ran) { b.x = b.hx; b.y = b.hy; } b.on = true; b.g.style.opacity = 1; if (b.lab) b.lab.style.opacity = 1; });
       if (ran) BB.relax(tbs, 2, 0);
-      tbs.forEach(BB.draw); return;
+      tbs.forEach(BB.draw); BB.fit(true); return;
     }
     var live = [];
     tbs.forEach(function (b) {
@@ -1117,7 +1134,7 @@ document.addEventListener('click', function (e) {
       b.g.style.opacity = 1;
     });
     if (x < 619.5) { BB.relax(live, 3, 0.02); BB.relax(live, 10, 0); }   /* in the final pause, glide freely into the resting layout */
-    live.forEach(BB.draw);
+    live.forEach(BB.draw); BB.fit();
   }
   function playTimeline(hold) {
     var a = setupTimeline(); if (!a) return;
